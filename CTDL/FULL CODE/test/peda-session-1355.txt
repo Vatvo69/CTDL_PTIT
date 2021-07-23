@@ -1,0 +1,4 @@
+break test.cpp:3
+break to_mau_do_thi.cpp:59
+
+set exec-wrapper The wrapper for running programs is \

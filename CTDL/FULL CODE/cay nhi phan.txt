@@ -1,0 +1,1729 @@
+//kiem tra node la
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+
+void addNODE(int u,int v,char x,node**root)
+{
+	if((*root)!=NULL&&(*root)->key==u)
+	{
+		if(x=='L') (*root)->left= new node(v);
+		else (*root)-> right=new node(v);
+	}
+	else
+	{
+	if((*root)->left!=NULL) addNODE(u,v,x,&(*root)->left);
+	if((*root)->right!=NULL) addNODE(u,v,x,&(*root)->right);
+	}
+}
+bool xuly(int a,int&b,node*root)
+{
+	a++;
+	if(!root->left&&!root->right)
+	{
+		if(b==-1) b=a;
+		if(b!=-1&&a!=b) return false;
+		if(b!=-1&&a==b) return true;
+	}
+	if(root->left)
+	{
+		if(!xuly(a,b,root->left)) return false;
+	}
+	if(root->right)
+	{
+		if(!xuly(a,b,root->right)) return false;
+	}
+	return true;
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n,u,v;
+		char x;
+		cin>>n>>u>>v>>x;
+		node*root=new node(u);
+		addNODE(u,v,x,&root);
+		for(int i=1;i<n;i++)
+		{
+			cin>>u>>v>>x;
+			addNODE(u,v,x,&root);
+		}
+		int b=-1;
+		cout<<xuly(0,b,root)<<endl;
+		
+	}
+}
+//cay bieu thuc 1
+#include <bits/stdc++.h> 
+using namespace std;
+int main() 
+{ 
+     ios_base::sync_with_stdio(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		string s;cin>>s;
+		stack<string> stk;
+		for(int i=0;i<s.size();i++)
+		{
+			if(s[i]=='+'||s[i]=='-'||s[i]=='*'||s[i]=='/')
+			{
+				string a=stk.top();stk.pop();
+				string b=stk.top();stk.pop();
+				string tmp=b+s[i]+a;
+				stk.push(tmp);
+			}
+			else stk.push(string(1,s[i]));
+		}
+		cout<<stk.top()<<endl;
+		
+	}
+}
+// Cay bieu thuc 2
+#include<bits/stdc++.h>
+using namespace std;
+int ketqua(string s)
+{
+    int res=0;
+	for(int i=0;i<s.size();i++)
+	{
+		res=res*10+s[i]-'0';
+	}
+	return res;
+}
+
+int xuly(int i,string *s)
+{
+	
+		 if(s[i]=="+"||s[i]=="-"||s[i]=="*"||s[i]=="/"||s[i]=="^")
+		{
+			if(s[i]=="+") return xuly(i*2+1,s)+xuly(i*2+2,s);
+			if(s[i]=="-") return xuly(i*2+1,s)-xuly(i*2+2,s);
+			if(s[i]=="*") return xuly(i*2+1,s)*xuly(i*2+2,s);
+			if(s[i]=="/") return xuly(i*2+1,s)/xuly(i*2+2,s);
+		}
+		else return ketqua(s[i]);
+	
+
+}
+main()
+{
+	
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		string s[n];
+		for(int i=0;i<n;i++) cin>>s[i];
+		cout<<xuly(0,s)<<endl;
+		
+	}
+}
+//Duyet cay 1
+#include<bits/stdc++.h>
+using namespace std;
+int vitri(int a[],int n,int x)
+{
+    for(int i=0;i<n;i++)
+	if(a[i]==x) return i;
+	return -1;
+}
+void xuly(int a[],int n,int b[])
+{
+	int i=vitri(a,n,b[0]);
+	if(i!=0) xuly(a,i,b+1);
+	if(i!=n-1) xuly(a+i+1,n-1-i,b+i+1);
+	cout<<b[0]<<" ";
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		int a[n],b[n];
+		for(int i=0;i<n;i++) cin>>a[i];
+		for(int i=0;i<n;i++) cin>>b[i];
+		xuly(a,n,b);
+		cout<<endl;
+		
+	}
+}
+//Duyet cay theo muc
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+
+void addNODE(int u,int v,char x,node**root)
+{
+	if((*root)!=NULL&&(*root)->key==u)
+	{
+		if(x=='L') (*root)->left= new node(v);
+		else (*root)-> right=new node(v);
+	}
+	else
+	{
+	if((*root)->left!=NULL) addNODE(u,v,x,&(*root)->left);
+	if((*root)->right!=NULL) addNODE(u,v,x,&(*root)->right);
+	}
+}
+void xuly(node*root)
+{
+	
+    // Base Case
+    if (root == NULL)  return;
+ 
+    // Create an empty queue for level order traversal
+    queue<node *> q;
+ 
+    // Enqueue Root and initialize height
+    q.push(root);
+ 
+    while (q.empty() == false)
+    {
+        // Print front of queue and remove it from queue
+        node *tmp = q.front();
+        cout << tmp->key << " ";
+        q.pop();
+ 
+        /* Enqueue left child */
+        if (tmp->left != NULL)
+            q.push(tmp->left);
+ 
+        /*Enqueue right child */
+        if (tmp->right != NULL)
+            q.push(tmp->right);
+    }
+}
+
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n,u,v;
+		char x;
+		cin>>n>>u>>v>>x;
+		node*root=new node(u);
+		addNODE(u,v,x,&root);
+		for(int i=2;i<=n;i++)
+		{
+			cin>>u>>v>>x;
+			addNODE(u,v,x,&root);
+		}
+		xuly(root);
+		cout<<endl;
+		
+	}
+}
+//Duyet cay 2
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+	    key=x;
+		left=right=NULL;
+	}
+};
+
+int find(int*a,int n,int x)
+{
+	for(int i=0;i<n;i++)
+	{
+		if(x==a[i]) return i;
+	}
+	return -1;
+}
+void addNODE(int n,int *a,int*b,node**root)
+{
+	(*root)=new node(b[0]);
+	int key=find(a,n,b[0]);
+	int lb[key],rb[n-1-key],x=0,y=0;
+	for(int i=1;i<n;i++)
+	{
+		if(find(a,n,b[i])>key) rb[x++]=b[i];
+		else lb[y++]=b[i];
+	}
+	if(key>0) addNODE(key,a,lb,&(*root)->left);
+	if(n-1-key>0) addNODE(n-1-key,a+key+1,rb,&(*root)->right);
+}
+void xuly(node*root)
+{
+	if(root)
+	{
+		if(root->left!=NULL) xuly(root->left);	
+		if(root->right!=NULL) xuly(root->right);	
+	}
+	
+	cout<<root->key<<" ";
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		int a[n],b[n];
+		for(int i=0;i<n;i++) cin>>a[i];
+		for(int i=0;i<n;i++) cin>>b[i];
+		node*root=NULL;
+		addNODE(n,a,b,&root);
+		xuly(root);
+		cout<<endl;
+	}
+}
+//Duyet cay nhi phan tim kiem 1
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+
+void chen(node**root,int x)
+{
+	if(*root==NULL)
+	{
+		(*root)=new node(x);
+	}
+	else 
+	{
+	
+	if(x<(*root)->key) chen(&(*root)->left,x);
+	else chen(&(*root)->right,x);
+	}
+}
+void xuly(node*root)
+{
+	if(root==NULL) return;
+	xuly(root->left);
+	xuly(root->right);
+	cout<<root->key<<" ";
+	
+	
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		node*root=NULL;
+		while(n--)
+		{
+			int m;cin>>m;
+			chen(&root,m);
+		}
+		xuly(root);
+		cout<<endl;
+	}
+}
+//Duyet cay kieu xoan oc
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+
+void addNODE(int u,int v,char x,node**root)
+{
+	if((*root)!=NULL&&(*root)->key==u)
+	{
+		if(x=='L') (*root)->left= new node(v);
+		else (*root)-> right=new node(v);
+	}
+	else
+	{
+	if((*root)->left!=NULL) addNODE(u,v,x,&(*root)->left);
+	if((*root)->right!=NULL) addNODE(u,v,x,&(*root)->right);
+	}
+}
+void xuly(node*root)
+{
+    if (root == NULL)return; 
+    stack<struct node*> s1; 
+    stack<struct node*> s2;
+    s1.push(root);
+    while (!s1.empty() || !s2.empty()) {
+	
+        while (!s1.empty()) {
+            struct node* temp = s1.top();
+            s1.pop();
+            cout << temp->key << " ";
+            if (temp->right)
+                s2.push(temp->right);
+            if (temp->left)
+                s2.push(temp->left);
+        }
+        while (!s2.empty()) {
+            struct node* temp = s2.top();
+            s2.pop();
+            cout << temp->key << " ";
+            if (temp->left)
+                s1.push(temp->left);
+            if (temp->right)
+                s1.push(temp->right);
+        }
+    }
+}
+
+main()
+{
+    ios_base::sync_with_stdio(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		int n,u,v;
+		char x;
+		cin>>n>>u>>v>>x;
+		node*root=new node(u);
+		addNODE(u,v,x,&root);
+		for(int i=2;i<=n;i++)
+		{
+			cin>>u>>v>>x;
+			addNODE(u,v,x,&root);
+		}
+		xuly(root);
+		cout<<endl;
+		
+	}
+}
+// cay nhi phan hoan hao
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+void addNODE(int u,int v,char x,node**root)
+{
+	if((*root)!=NULL&&(*root)->key==u)
+	{
+		if(x=='L') (*root)->left= new node(v);
+		else (*root)-> right=new node(v);
+	}
+	else
+	{
+	if((*root)->left!=NULL) addNODE(u,v,x,&(*root)->left);
+	if((*root)->right!=NULL) addNODE(u,v,x,&(*root)->right);
+	}
+}
+int findADepth(node *node)
+{
+   int d = 0;
+   while (node != NULL)
+   {
+      d++;
+      node = node->left;
+   }
+   return d;
+}
+
+bool isPerfectRec( node* root, int d, int level = 0)
+{
+    if (root == NULL)
+        return true;
+    if (root->left == NULL && root->right == NULL)
+        return (d == level+1);
+    if (root->left == NULL || root->right == NULL)
+        return false;
+    return isPerfectRec(root->left, d, level+1) &&
+           isPerfectRec(root->right, d, level+1);
+}
+bool isPerfect(node *root)
+{
+   int d = findADepth(root);
+   return isPerfectRec(root, d);
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n,u,v;
+		char x;
+		cin>>n>>u>>v>>x;
+		node*root=new node(u);
+		addNODE(u,v,x,&root);
+		for(int i=2;i<=n;i++)
+		{
+			cin>>u>>v>>x;
+			addNODE(u,v,x,&root);
+		}
+	
+	 if (isPerfect(root)) cout<<"Yes"<<endl;
+	 else cout<<"No"<<endl;
+	
+		
+		
+	}
+}
+//Cay nhi phan du
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+void addNODE(int u,int v,char x,node**root)
+{
+	if((*root)!=NULL&&(*root)->key==u)
+	{
+		if(x=='L') (*root)->left= new node(v);
+		else (*root)-> right=new node(v);
+	}
+	else
+	{
+	if((*root)->left!=NULL) addNODE(u,v,x,&(*root)->left);
+	if((*root)->right!=NULL) addNODE(u,v,x,&(*root)->right);
+	}
+}
+bool isFullTree ( node* root)
+{
+    if (root == NULL)
+        return true;
+
+    if (root->left == NULL && root->right == NULL)
+        return true;
+    if ((root->left) && (root->right))
+        return (isFullTree(root->left) && isFullTree(root->right));
+    return false;
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n,u,v;
+		char x;
+		cin>>n>>u>>v>>x;
+		node*root=new node(u);
+		addNODE(u,v,x,&root);
+		for(int i=2;i<=n;i++)
+		{
+			cin>>u>>v>>x;
+			addNODE(u,v,x,&root);
+		}
+	
+	 if (isFullTree(root)) cout<<"1"<<endl;
+	 else cout<<"0"<<endl;
+	
+		
+		
+	}
+}
+// Cay nhi phan bang nhau
+#include<bits/stdc++.h>
+using namespace std;
+vector<string> a;
+vector<string>b;
+main()
+{
+    int t;cin>>t;
+	while(t--)
+	{
+		int n,m;
+		cin>>n;
+		for(int i=0;i<3*n;i++)
+		{
+			string k;cin>>k;
+			a.push_back(k);
+		}
+		cin>>m;
+		int dem=0;
+		for(int i=0;i<3*m;i++)
+		{
+			string k;cin>>k;
+			b.push_back(k);
+		}
+		if(n!=m) 
+		{
+			cout<<0<<endl;
+			break;
+		}
+		
+		else
+		{
+			for(int i=0;i<a.size();i++) 
+			{
+				if(a[i]!=b[i])
+				{
+					cout<<"0"<<endl;
+					dem++;
+					break;
+				}
+			}
+		}
+		if(dem==0) cout<<1<<endl;
+		
+	}
+}
+//Tong node la ben phai
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+struct data{
+	int u,v;
+	char x;
+};
+void addNODE(int n,data*a,node**root)
+{
+	map<int,node*>m;
+	for(int i=0;i<n;i++)
+	{
+		if(m.find(a[i].u)==m.end())
+		{
+			(*root)=new node(a[i].u);
+			if(a[i].x=='L')
+			{
+				(*root)->left=new node(a[i].v);
+				m[a[i].v]=(*root)->left;
+			}
+			else
+			{
+				(*root)->right=new node(a[i].v);
+				m[a[i].v]=(*root)->right;
+			}
+			m[a[i].u]=(*root);
+		}
+		else
+		{
+			if(a[i].x=='L')
+			{
+				m[a[i].u]->left=new node(a[i].v);
+				m[a[i].v]=m[a[i].u]->left;
+			}
+			else
+			{
+				m[a[i].u]->right=new node(a[i].v);
+				m[a[i].v]=m[a[i].u]->right;
+			}
+		}
+	}
+}
+bool isLeaf(node *root)
+{
+    if(!root ) return false;
+    if(!root->left  && !root->right )
+        return true;
+    return false;
+}
+int rightLeafSum(node *root){
+	int sum=0;
+    if(root)
+	{
+    if(isLeaf(root->right))
+            sum = root->right->key;
+ 	if(root->right)
+ 	sum+=rightLeafSum(root->right);
+    if(root->left&&!isLeaf(root->left))
+    sum+=rightLeafSum(root->left);
+    }
+    return sum;
+}
+
+
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		data a[n]={};
+		node*root=NULL;
+	
+		for(int i=0;i<n;i++)
+		{
+			cin>>a[i].u>>a[i].v>>a[i].x;
+			
+		}
+		addNODE(n,a,&root);
+		cout<<rightLeafSum(root)<<endl;
+		
+	}
+}
+// Tong lon nhat
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+void addNODE(int u,int v,char x,node**root)
+{
+	if((*root)!=NULL&&(*root)->key==u)
+	{
+		if(x=='L') (*root)->left= new node(v);
+		else (*root)-> right=new node(v);
+	}
+	else
+	{
+	if((*root)->left!=NULL) addNODE(u,v,x,&(*root)->left);
+	if((*root)->right!=NULL) addNODE(u,v,x,&(*root)->right);
+	}
+}
+int max(int a, int b)
+{ return (a >= b)? a: b; }
+ 
+int maxPathSumUtil( node *root, int &res)
+{
+    
+    if (root==NULL) return 0;
+    if (!root->left && !root->right) return root->key;
+    int ls = maxPathSumUtil(root->left, res);
+    int rs = maxPathSumUtil(root->right, res);
+ 
+    if (root->left && root->right)
+    {
+       
+        res = max(res, ls + rs + root->key); 
+        return max(ls, rs) + root->key;
+    }
+ 
+    return (!root->left)? rs + root->key:ls + root->key;
+}
+ 
+int maxPathSum(struct node *root)
+{
+    int res = INT_MIN;
+    maxPathSumUtil(root, res);
+    return res;
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n,u,v;
+		char x;
+		cin>>n>>u>>v>>x;
+		node*root=new node(u);
+		addNODE(u,v,x,&root);
+		for(int i=2;i<=n;i++)
+		{
+			cin>>u>>v>>x;
+			addNODE(u,v,x,&root);
+		}
+	
+	cout<<maxPathSum(root)<<endl;
+	
+		
+		
+	}
+}
+//Bien doi sang cay nhi phan tim kiem
+#include<bits/stdc++.h>
+using namespace std;
+vector<int>res;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+
+void addNODE(int u,int v,char x,node**root)
+{
+	if((*root)!=NULL&&(*root)->key==u)
+	{
+		if(x=='L') (*root)->right= new node(v);
+		else (*root)-> left=new node(v);
+	}
+	else
+	{
+	if((*root)->left!=NULL) addNODE(u,v,x,&(*root)->left);
+	if((*root)->right!=NULL) addNODE(u,v,x,&(*root)->right);
+	}
+}
+void xuly(node*root)
+{
+	 
+    if (root == NULL)  return;
+    queue<node *> q;
+ 
+    
+    q.push(root);
+ 
+    while (q.empty() == false)
+    {
+        
+        node *tmp = q.front();
+        res.push_back(tmp->key);
+        q.pop();
+        if (tmp->left != NULL)
+            q.push(tmp->left);
+        if (tmp->right != NULL)
+            q.push(tmp->right);
+    }
+    sort(res.begin(),res.end());
+    for(int i=0;i<res.size();i++) cout<<res[i]<<" ";
+}
+
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n,u,v;
+		char x;
+		cin>>n>>u>>v>>x;
+		res.clear();
+		node*root=new node(u);
+		addNODE(u,v,x,&root);
+		for(int i=2;i<=n;i++)
+		{
+			cin>>u>>v>>x;
+			addNODE(u,v,x,&root);
+		}
+		xuly(root);
+		cout<<endl;
+		
+	}
+}
+//Xay dung lai cay nhi phan tim kiem
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+void chen(node**root,int x)
+{
+	if(*root==NULL)
+	{
+		(*root)=new node(x);
+	}
+	else 
+	{
+	
+	if(x<(*root)->key) chen(&(*root)->left,x);
+	else chen(&(*root)->right,x);
+	}
+}
+int maxDepth(node* node)
+{
+    if (node == NULL)
+        return 0;
+    else
+    {
+        int lDepth = maxDepth(node->left);
+        int rDepth = maxDepth(node->right);
+        if (lDepth > rDepth)
+            return(lDepth + 1);
+        else return(rDepth + 1);
+    }
+}
+void xuly( node* node)
+{
+    if (node == NULL)
+        return;
+    cout<<node->key<<" ";
+    xuly(node->left);
+    xuly(node->right);
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		node*root=NULL;
+		for(int i=1;i<=n;i++)
+		{
+			int m;cin>>m;
+			chen(&root,m);
+		}
+		xuly(root);
+		cout<<endl;
+	}
+}
+//Duyet cay nhi phan tim kiem 2
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+
+void chen(node**root,int x)
+{
+	if(*root==NULL)
+	{
+		(*root)=new node(x);
+	}
+	else 
+	{
+	
+	if(x<(*root)->key) chen(&(*root)->left,x);
+	else chen(&(*root)->right,x);
+	}
+}
+void xuly(node*root)
+{
+	if(root==NULL) return;
+	xuly(root->left);
+	xuly(root->right);
+	cout<<root->key<<" ";
+	
+	
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		node*root=NULL;
+		while(n--)
+		{
+			int m;cin>>m;
+			chen(&root,m);
+		}
+		xuly(root);
+		cout<<endl;
+	}
+}
+//Kiem tra cay nhi phan tim kiem
+#include <bits/stdc++.h>
+using namespace std;
+bool isInorder(int arr[], int n)
+{
+    if (n == 0 || n == 1)
+        return true;
+  
+    for (int i = 1; i < n; i++)
+        if (arr[i-1] > arr[i])
+            return false;
+    return true;
+}
+int main()
+{
+    int t;cin>>t;
+    while(t--)
+	{
+		int n;cin>>n;
+		int arr[n];
+		for(int i=0;i<n;i++) cin>>arr[i];
+		if (isInorder(arr, n))
+        cout << "1";
+   		else cout << "0";   
+		cout<<endl;     
+    
+	 } 
+      
+}
+//Node la cua cay nhi phan tim kiem
+#include<bits/stdc++.h>
+using namespace std;
+  
+#include<bits/stdc++.h>
+using namespace std;
+
+int binarySearch(int inorder[], int l, int r, int d)
+{
+    int mid = (l + r)>>1;
+  
+    if (inorder[mid] == d)
+        return mid;
+  
+    else if (inorder[mid] > d)
+        return binarySearch(inorder, l, mid - 1, d);
+  
+    else
+        return binarySearch(inorder, mid + 1, r, d);
+}
+void leafNodesRec(int preorder[], int inorder[],int l, int r, int *ind, int n)
+{
+    if(l == r)
+    {
+        printf("%d ", inorder[l]);
+        *ind = *ind + 1;
+        return;
+    }
+    if (l < 0 || l > r || r >= n)
+        return;
+    int loc = binarySearch(inorder, l, r, preorder[*ind]);
+    *ind = *ind + 1;
+    leafNodesRec(preorder, inorder, l, loc - 1, ind, n);
+    leafNodesRec(preorder, inorder, loc + 1, r, ind, n);
+}
+  
+void leafNodes(int preorder[], int n)
+{
+    int inorder[n]; 
+    for (int i = 0; i < n; i++)
+        inorder[i] = preorder[i];
+    sort(inorder, inorder + n);
+    int ind = 0;
+    leafNodesRec(preorder, inorder, 0, n - 1, &ind, n);
+}
+int main()
+{
+    int t;cin>>t;
+	while(t--)
+	{
+    int n;cin>>n;
+    int a[n];
+    for(int i=0;i<n;i++) cin>>a[i];
+    leafNodes(a, n);  
+    cout<<endl;
+	}  
+    return 0;
+}
+//Node trung gian cua cay nhi phan tim kiem
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+vector<int>res;
+void chen(node**root,int x)
+{
+	if(*root==NULL)
+	{
+		(*root)=new node(x);
+	}
+	else 
+	{
+	
+	if(x<(*root)->key) chen(&(*root)->left,x);
+	else chen(&(*root)->right,x);
+	}
+}
+void preOrder(node* node)
+{
+    if (node == NULL) return;
+    res.push_back(node->key);
+    preOrder(node->left);
+    
+    preOrder(node->right);
+    
+}
+int CountNode(node* node) {
+   if( node == NULL)
+      return 0;
+   if(node->left==NULL&&node->right==NULL) return 1;
+      return  CountNode(node->left) + CountNode(node->right);
+}
+
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		node*root=NULL;
+		res.clear();
+		int h=n;
+		while(n--)
+		{
+			int m;cin>>m;
+			chen(&root,m);
+		}
+
+		cout<<h-CountNode(root)<<endl;
+	}
+	
+}
+//Do sau cua cay nhi phan tim kiem
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+vector<int>res;
+void chen(node**root,int x)
+{
+	if(*root==NULL)
+	{
+		(*root)=new node(x);
+	}
+	else 
+	{
+	
+	if(x<(*root)->key) chen(&(*root)->left,x);
+	else chen(&(*root)->right,x);
+	}
+}
+int maxDepth(node* node)
+{
+    if (node == NULL)
+        return 0;
+    else
+    {
+        int lDepth = maxDepth(node->left);
+        int rDepth = maxDepth(node->right);
+        if (lDepth > rDepth)
+            return(lDepth + 1);
+        else return(rDepth + 1);
+    }
+}
+void xuly2( node* node)
+{
+    if (node == NULL)
+        return;
+ 
+    /* first print data of node */
+    res.push_back(node->key) ;
+ 
+    /* then recur on left sutree */
+    xuly2(node->left);
+ 
+    /* now recur on right subtree */
+    xuly2(node->right);
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		node*root=NULL;
+	    res.clear();
+		for(int i=1;i<=n;i++)
+		{
+			int m;cin>>m;
+			chen(&root,m);
+		}
+		xuly2(root);
+		node*k=NULL;
+		for(int i=0;i<res.size();i++) chen(&k,res[i]);
+		cout<<maxDepth(k)-1;
+		cout<<endl;
+	}
+}
+//Cay nhi phan tim kiem can bang 1
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+
+void chen(node**root,int x)
+{
+	if(*root==NULL)
+	{
+		(*root)=new node(x);
+	}
+	else 
+	{
+	
+	if(x<(*root)->key) chen(&(*root)->left,x);
+	else chen(&(*root)->right,x);
+	}
+}
+void storeBSTNodes(node* root, vector<node*> &nodes)
+{
+    if (root==NULL)
+        return;
+    storeBSTNodes(root->left, nodes);
+    nodes.push_back(root);
+    storeBSTNodes(root->right, nodes);
+}
+  
+node* buildTreeUtil(vector<node*> &nodes, int start, int end)
+{
+    if (start > end)
+        return NULL;
+  
+    int mid = (start + end)/2;
+    node *root = nodes[mid];
+    root->left  = buildTreeUtil(nodes, start, mid-1);
+    root->right = buildTreeUtil(nodes, mid+1, end);
+  
+    return root;
+}
+
+node* buildTree(node* root)
+{
+    vector<node *> nodes;
+    storeBSTNodes(root, nodes);
+    int n = nodes.size();
+    return buildTreeUtil(nodes, 0, n-1);
+}
+  
+void preOrder(node* node)
+{
+    if (node == NULL)
+        return;
+    cout<<node->key;
+    //preOrder(node->left);
+    //preOrder(node->right);
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		node*root=NULL;
+		while(n--)
+		{
+			int m;cin>>m;
+			chen(&root,m);
+		}
+	root = buildTree(root);
+	preOrder(root);
+		cout<<endl;
+	}
+}
+//Cay tim kiem nhi phan can bang 2
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+
+void chen(node**root,int x)
+{
+	if(*root==NULL)
+	{
+		(*root)=new node(x);
+	}
+	else 
+	{
+	
+	if(x<(*root)->key) chen(&(*root)->left,x);
+	else chen(&(*root)->right,x);
+	}
+}
+void storeBSTNodes(node* root, vector<node*> &nodes)
+{
+    if (root==NULL)
+        return;
+    storeBSTNodes(root->left, nodes);
+    nodes.push_back(root);
+    storeBSTNodes(root->right, nodes);
+}
+  
+node* buildTreeUtil(vector<node*> &nodes, int start, int end)
+{
+    if (start > end)
+        return NULL;
+  
+    int mid = (start + end)/2;
+    node *root = nodes[mid];
+    root->left  = buildTreeUtil(nodes, start, mid-1);
+    root->right = buildTreeUtil(nodes, mid+1, end);
+  
+    return root;
+}
+
+node* buildTree(node* root)
+{
+    vector<node *> nodes;
+    storeBSTNodes(root, nodes);
+    int n = nodes.size();
+    return buildTreeUtil(nodes, 0, n-1);
+}
+  
+void preOrder(node* node)
+{
+    if (node == NULL)
+        return;
+    cout<<node->key<<" ";
+    preOrder(node->left);
+    preOrder(node->right);
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		node*root=NULL;
+		while(n--)
+		{
+			int m;cin>>m;
+			chen(&root,m);
+		}
+	root = buildTree(root);
+	preOrder(root);
+		cout<<endl;
+	}
+}
+//Do cao cua cay
+#include<bits/stdc++.h>
+using namespace std;
+#define pb push_back
+vector<vector<int> > res;
+vector<int> cnt, chuaxet;
+ 
+void DFS(int u){
+    chuaxet[u] = true;
+	for(auto x: res[u]){
+		if(chuaxet[x]) continue;
+		cnt[x] = cnt[u] + 1;
+		DFS(x);
+	}
+}
+void xuly(){
+ 
+	int n;
+	cin >> n;
+	res.clear();
+	res.resize(n + 1);
+	cnt.assign(n + 1, 0);
+	chuaxet.assign(n + 1, 0);
+	for(int i=1;i<=n-1;i++)
+	{
+		int x, y;
+		cin >> x >> y;
+		res[x].pb(y);
+		res[y].pb(x);
+ 	}
+ 	int ans = 0;
+ 	cnt[1] = 1;
+ 	DFS(1);
+ for(int i=1;i<=n;i++) ans = max(ans, cnt[i]);
+ 	cout << ans - 1 << endl;
+ 
+}
+  main(){
+	int t;cin>>t;
+	while(t--)
+	{
+		xuly();
+	}
+		
+}
+//Duong di toi node la
+#include<bits/stdc++.h>
+using namespace std;
+#define all(vec) vec.begin(), vec.end()
+#define FOR(i, m, n) for(int i=m; i<n; i++)
+#define FORD(i, m, n) for(int i=m; i>=n; i--)
+#define reset(A) memset(A, 0, sizeof(A))
+const int MAXN = 5005 + 5;
+const int mod = 1e9 + 7;
+ 
+vector<vector<int> > adj(MAXN), path;
+int back[MAXN] = {};
+ 
+void road(int node){
+    path[path.size() - 1].push_back(node);
+	if(back[node] == 1){
+		path[path.size() - 1].push_back(1);
+		return;
+	}
+	road(back[node]);
+}
+ 
+void dfs(int u){
+	if(adj[u].size() == 0){
+		path.resize(path.size() + 1);
+		road(u);
+		return;
+	}
+	for(auto x: adj[u]) 
+//	for(int x=0;x<adj[u].size();x++)
+	{
+		back[x] = u;
+		dfs(x);
+	}
+}
+ 
+void output(){
+	sort(all(path), [&](vector<int> v1, vector<int> v2){
+		return v1[0] < v2[0];
+	});
+ 
+	FOR(i, 0, path.size()){
+		FORD(j, path[i].size() - 1, 0) cout << path[i][j] << ' ';
+		cout << endl;
+	}
+	cout << endl;
+ 
+}
+ 
+void solution(){
+	adj.clear();
+	int n;
+	cin >> n;
+	adj.resize(n + 5);
+	path.clear();
+	reset(back);
+	FOR(i, 0, n - 1){
+		int x, y;
+		cin >> x >> y;
+		adj[x].push_back(y);
+	}
+ 
+	dfs(1);
+ 
+	output();
+ 
+}
+int main(){
+
+	int t;	
+	cin >> t; 	
+	while(t--) solution();	
+	return 0;	
+}
+//Duyet cay sau tim kiem can bang
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+vector<int>res;
+void chen(node**root,int x)
+{
+	if(*root==NULL)
+	{
+		(*root)=new node(x);
+	}
+	else 
+	{
+	
+	if(x<(*root)->key) chen(&(*root)->left,x);
+	else chen(&(*root)->right,x);
+	}
+}
+void printPostorder( node* node)
+{
+    if (node == NULL)
+        return;
+    printPostorder(node->left);
+ 
+    // then recur on right subtree
+    printPostorder(node->right);
+    cout << node->key << " ";
+}
+ void storeBSTNodes(node* root, vector<node*> &nodes)
+{
+    if (root==NULL)
+        return;
+    storeBSTNodes(root->left, nodes);
+    nodes.push_back(root);
+    storeBSTNodes(root->right, nodes);
+}
+  
+node* buildTreeUtil(vector<node*> &nodes, int start, int end)
+{
+    if (start > end)
+        return NULL;
+  
+    int mid = (start + end)/2;
+    node *root = nodes[mid];
+    root->left  = buildTreeUtil(nodes, start, mid-1);
+    root->right = buildTreeUtil(nodes, mid+1, end);
+  
+    return root;
+}
+
+node* buildTree(node* root)
+{
+    vector<node *> nodes;
+    storeBSTNodes(root, nodes);
+    int n = nodes.size();
+    return buildTreeUtil(nodes, 0, n-1);
+}
+  
+void preOrder(node* node)
+{
+    if (node == NULL)
+        return;
+    res.push_back(node->key);
+    preOrder(node->left);
+    preOrder(node->right);
+}
+
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		node*root=NULL;
+		res.clear();
+		while(n--)
+		{
+			int m;cin>>m;
+			chen(&root,m);
+		}
+		root = buildTree(root);
+	preOrder(root);
+	printPostorder(root);
+		cout<<endl;
+	}
+	
+}
+//Dem so la cua cay tim kiem nhi phan can bang
+#include<bits/stdc++.h>
+using namespace std;
+struct node{
+    int key;
+	node*left;
+	node*right;
+	node(int x)
+	{
+		this->key=x;
+		left=right=NULL;
+	}
+};
+vector<int>res;
+void chen(node**root,int x)
+{
+	if(*root==NULL)
+	{
+		(*root)=new node(x);
+	}
+	else 
+	{
+	
+	if(x<(*root)->key) chen(&(*root)->left,x);
+	else chen(&(*root)->right,x);
+	}
+}
+void storeBSTNodes(node* root, vector<node*> &nodes)
+{
+    if (root==NULL)
+        return;
+    storeBSTNodes(root->left, nodes);
+    nodes.push_back(root);
+    storeBSTNodes(root->right, nodes);
+}
+  
+node* buildTreeUtil(vector<node*> &nodes, int start, int end)
+{
+    if (start > end)
+        return NULL;
+  
+    int mid = (start + end)/2;
+    node *root = nodes[mid];
+    root->left  = buildTreeUtil(nodes, start, mid-1);
+    root->right = buildTreeUtil(nodes, mid+1, end);
+  
+    return root;
+}
+
+node* buildTree(node* root)
+{
+    vector<node *> nodes;
+    storeBSTNodes(root, nodes);
+    int n = nodes.size();
+    return buildTreeUtil(nodes, 0, n-1);
+}
+  
+void preOrder(node* node)
+{
+    if (node == NULL)
+        return;
+    res.push_back(node->key);
+    preOrder(node->left);
+    preOrder(node->right);
+}
+bool isLeafNode(node *l){
+	return (l->left == NULL && l->right == NULL);
+}
+int countLeafNode(node *t){
+	if (t == NULL) return 0;
+	if (isLeafNode(t)) return 1;
+	return countLeafNode(t->left) + countLeafNode(t->right);
+}
+
+main()
+{
+    ios_base::sync_with_stdio(false); cout.tie(0);cin.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		int n;cin>>n;
+		node*root=NULL;
+		res.clear();
+		while(n--)
+		{
+			int m;cin>>m;
+			chen(&root,m);
+		}
+	root = buildTree(root);
+	preOrder(root);
+	node*k=NULL;
+		for(int i=0;i<res.size();i++) chen(&k,res[i]);
+	cout<<countLeafNode(k);
+		cout<<endl;
+	}
+}
+// Khoang cach giua hai node
+#include<bits/stdc++.h>
+using namespace std;
+#define pb push_back
+#define ll long long
+#define endl '\n'
+#define mp make_pair
+#define mt make_tuple
+vector<vector<int> > res;
+vector<int> cnt;
+vector<bool> chuaxet;
+bool check;
+int start, fis;
+ 
+void DFS(int u){
+    if(u == fis) check = true;
+	if(check) return;
+	chuaxet[u] = true;
+	for(auto x: res[u])
+//	for(int x=0;x<res[u].size();x++)
+	{
+		if(chuaxet[x]) continue;
+		cnt[x] = cnt[u] + 1;
+		DFS(x);
+	}
+}
+ 
+ 
+ 
+void xuly(){
+ 
+	int n;
+	cin >> n;
+	res.clear();
+	res.resize(n+5);
+	for(int i=1;i<=n-1;i++){
+		int x, y;
+		cin >> x >> y;
+		res[x].push_back(y);
+		res[y].push_back(x);
+	}
+ 
+ 	int Q;
+ 	cin >> Q;
+ 	while(Q--)
+	 {
+ 
+ 		cin >> start >> fis;
+ 		cnt.assign(n + 1, 0);
+ 		chuaxet.assign(n + 1, 0);
+ 		check = false;
+ 
+ 		DFS(start);
+ 		cout << cnt[fis] << endl;
+ 
+	} 
+}
+ 
+int main(){
+ 	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	xuly();	
+	return 0;	
+}
+

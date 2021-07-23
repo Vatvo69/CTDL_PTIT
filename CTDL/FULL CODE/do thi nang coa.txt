@@ -1,0 +1,723 @@
+//liet ke dinh tru
+#include <bits/stdc++.h> 
+using namespace std;
+vector<int> res[1005];
+bool OK[1005];
+void xuly(int k)
+{
+    queue<int> q;
+	q.push(k);
+	while(q.size()>0)
+	{
+		int top=q.front();q.pop();
+		
+		OK[top]=true;
+		for(int i=0;i<res[top].size();i++)
+		{
+			if(!OK[res[top][i]])
+			{
+				OK[res[top][i]]=true;
+				q.push(res[top][i]);
+			}
+		}
+		
+	}
+}
+main()
+{
+	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(OK,false,sizeof(OK));
+		int a,b;
+		cin>>a>>b;
+		for(int i=0;i<b;i++)
+		{
+			int u,v;
+			cin>>u>>v;
+			res[u].push_back(v);
+			res[v].push_back(u);
+		}
+		int res=0;
+		for(int i=1;i<=a;i++)
+		{
+			if(!OK[i])
+			{
+				res++;
+				xuly(i);
+			}
+		}
+	
+		for(int i=1;i<=a;i++)
+		{
+			memset(OK,false,sizeof(OK));
+			OK[i]=true;
+				int dem=0;
+			for(int j=1;j<=a;j++)
+			{
+				if(!OK[j])
+				{
+					dem++;
+					xuly(j);
+				}
+			}
+			if(dem>res) cout<<i<<" ";
+		}
+	
+		cout<<endl;	
+	}
+}
+//Kiem tra chu trinh
+#include<bits/stdc++.h>
+using namespace std;
+bool DFS(int s,int v,vector< vector<int> >list,bool* chuaxet)
+{
+    vector<int> a(v,-1);
+	queue<int> q;q.push(s);
+	chuaxet[s]=true;
+	while(!q.empty())
+	{
+		s=q.front();q.pop();
+		for(int i=0;i<list[s].size();i++)
+		{
+			if(!chuaxet[list[s][i]])
+			{
+				chuaxet[list[s][i]]=true;
+				a[list[s][i]]=s;
+				q.push(list[s][i]);
+				
+			}
+			else if(a[s]!=list[s][i]) return true;
+		}
+	}
+	return false;
+}
+bool xuly(int v,vector< vector<int> >list)
+{
+	bool chuaxet[v]={};
+	for(int i=0;i<v;i++) 
+	{
+			if(!chuaxet[i]&& DFS (i,v,list,chuaxet)) return true;
+	}
+
+	return false;
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int m,n;cin>>m>>n;
+		vector< vector<int> > list(m,vector<int>());
+		while(n--)
+		{
+			int u,v;cin>>u>>v;
+			list[u-1].push_back(v-1);
+			list[v-1].push_back(u-1);
+		}
+		if(xuly(m,list)) cout<<"YES";
+		else cout<<"NO";
+		cout<<endl;
+	}
+}
+//Tim duong
+#include<bits/stdc++.h>
+using namespace std;
+ 
+vector<vector<char> > A;
+pair<int,int> start, fis;
+vector<vector<bool> > vis;
+int n, m;
+ 
+bool BFS(){
+    queue<pair<pair<int,int>, int> > q;
+	q.push({start, -1});
+	vis[start.first][start.second] = true;
+ 
+ 
+	while(!q.empty()){
+		auto P = q.front(); q.pop();
+ 
+		auto pos = P.first;
+		int move = P.second;
+		int x = pos.first, y = pos.second;
+ 
+		if(x == fis.first && y == fis.second) return true;
+		if(move >= 2) continue;
+ 
+ 
+		int index = 0;
+		int row = x - 1, col = y;
+ 
+		while(row > 0 && row <= n && A[row][col] == '.'){
+			if(vis[row][col]){
+				row--;
+				continue;
+			}
+			vis[row][col] = true;
+			q.push({{row--, col}, move + 1});
+		}
+		if(A[row][col] == 'T') return true;
+ 
+		row = x + 1, col = y;
+		while(row > 0 && row <= n && A[row][col] == '.'){
+			if(vis[row][col]){
+				row++;
+				continue;
+			}
+			vis[row][col] = true;
+			q.push({{row++, col}, move + 1});
+		}
+		if(A[row][col] == 'T') return true;
+ 
+		row = x, col = y - 1;
+		while(col > 0 && col <= m && A[row][col] == '.'){
+			if(vis[row][col]){
+				col--;
+				continue;
+			}
+			vis[row][col] = true;
+			q.push({{row, col--}, move + 1});
+		}
+		if(A[row][col] == 'T') return true;
+ 
+		row = x, col = y + 1;
+		while(col > 0 && col <= m && A[row][col] == '.'){
+ 
+			if(vis[row][col]){
+				col++;
+				continue;
+			}
+			vis[row][col] = true;
+			q.push({{row, col++}, move + 1});
+		}
+		if(A[row][col] == 'T') return true;
+ 
+	}
+	return false;
+ 
+}
+ 
+void solution(){
+ 
+	cin >> n >> m;
+ 
+	A.assign(n + 5, vector<char>(m + 5, '*'));
+	vis.assign(n + 5, vector<bool>(m + 5, false));
+ 
+ 
+	for(int i=1;i<=n;i++) 
+	for(int j=1;j<=m;j++){
+		cin >> A[i][j];
+		if(A[i][j] == 'S') start = {i, j};
+		else if(A[i][j] == 'T') fis = {i, j};
+}
+ 
+	cout << (BFS()? "YES" : "NO") << endl;
+ 
+}
+
+int main(){
+
+	int test = 1;	
+	cin >> test; cin.ignore();	
+ 
+	while(test--) solution();
+ 
+	return 0;	
+}
+//Cay khung cua do thi theo thuat toan DFS
+#include<bits/stdc++.h>
+using namespace std;
+struct data{
+    int u;
+	int v;
+};
+bool chuaxet[1005];
+int check[1005];
+vector<int> res[1005];
+vector<data> kq;
+void DFS(int s,int v)
+{
+	queue<int> q;q.push(s);
+	chuaxet[s]=true;
+	while(!q.empty())
+	{
+		s=q.front();q.pop();
+		for(int i=0;i<res[s].size();i++)
+		{
+			if(!chuaxet[res[s][i]])
+			{
+			//	chuaxet[res[s][i]]=true;
+				check[res[s][i]]=s;
+				data a={s,res[s][i]};
+				kq.push_back(a);
+				DFS(res[s][i],v);
+			///	q.push(res[s][i]);
+				
+			}
+			
+		}
+	}
+}
+void xuly(int v)
+{
+	//bool chuaxet[v]={};
+	if(kq.size()==v-1)
+	{
+	for(int i=0;i<kq.size();i++) 
+	{
+		cout<<kq[i].u<<" "<<kq[i].v<<endl;
+	}
+	}
+	else cout<<-1<<endl;
+
+}
+main()
+{
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(chuaxet,false,sizeof(chuaxet));
+		memset(check,0,sizeof(check));
+		kq.clear();
+		int m,n,k;cin>>m>>n>>k;
+		while(n--)
+		{
+			int u,v;cin>>u>>v;
+			if(u<=m &&u>=0 && v<=m && v>=0)
+			{
+			res[u].push_back(v);
+			res[v].push_back(u);
+			}
+		}
+		DFS(k,m);
+		xuly(m);
+	}
+}
+//Cay khung cua do thi theo thuat toan BFS
+#include<bits/stdc++.h>
+using namespace std;
+struct data{
+    int u;
+	int v;
+};
+bool chuaxet[1005];
+int check[1005];
+vector<int> res[1005];
+vector<data> kq;
+void DFS(int s,int v)
+{
+	queue<int> q;q.push(s);
+	chuaxet[s]=true;
+	while(!q.empty())
+	{
+		s=q.front();q.pop();
+		for(int i=0;i<res[s].size();i++)
+		{
+			if(!chuaxet[res[s][i]])
+			{
+				chuaxet[res[s][i]]=true;
+				data a={s,res[s][i]};
+				kq.push_back(a);
+				q.push(res[s][i]);
+				
+			}
+			
+		}
+	}
+}
+void xuly(int v)
+{
+	//bool chuaxet[v]={};
+	if(kq.size()==v-1)
+	{
+	for(int i=0;i<kq.size();i++) 
+	{
+		cout<<kq[i].u<<" "<<kq[i].v<<endl;
+	}
+	}
+	else cout<<-1<<endl;
+
+}
+main()
+{
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(chuaxet,false,sizeof(chuaxet));
+		memset(check,0,sizeof(check));
+		kq.clear();
+		int m,n,k;cin>>m>>n>>k;
+		while(n--)
+		{
+			int u,v;cin>>u>>v;
+		//	if(u<=m &&u>=0 && v<=m && v>=0)
+		//	{
+			res[u].push_back(v);
+			res[v].push_back(u);
+		//	}
+		}
+		DFS(k,m);
+		xuly(m);
+	}
+}
+// DIJKSTRA
+#include<bits/stdc++.h>
+using namespace std;
+typedef pair<int, int> ii;
+vector<ii> a[1005];
+int n, m,start;
+priority_queue<ii, vector<ii>, greater<ii> > pq;
+int d[1005];
+void dijkstra(int st) { 
+    int u,v;
+    for (int i = 1; i <= n; i++) d[i] = 1e9;
+    d[st] = 0;
+   // while(!pq.empty()) pq.pop();
+        pq.push(ii(0, st));
+
+    while (!pq.empty()) {
+         u = pq.top().second;pq.pop();
+        for (int i = 0; i < a[u].size(); i++) {
+             v = a[u][i].second;
+            int uv = a[u][i].first;
+            if (d[v] > d[u] + uv) {
+                d[v] = d[u] + uv;
+                pq.push(ii(d[v], v));
+            }
+        }
+    }
+    for(int i=1;i<=n;i++) cout<<d[i]<<" ";
+    cout<<endl;
+}
+
+int main() {
+	int t;cin>>t;
+	while(t--)
+	{
+	int u,v,k;
+    cin>>n>>m>>start;
+    for(int i=0;i<=n;i++) a[i].clear(); 
+    while (m--) {
+        cin>>u>>v>>k;
+        a[u].push_back(ii(k, v));
+        a[v].push_back(ii(k, u));
+    }
+    dijkstra(start);
+    
+	}  
+}
+//Ployd
+#include <bits/stdc++.h>
+using namespace std;
+const int oo = 1000111000;
+int a[200][200];
+int n, m;
+
+void minimize(int &a, int b) 
+{
+    if (a > b)
+        a = b;
+}
+void xuly()
+{
+    cin>>n>>m;
+    for (int i = 1; i <= n; i++)
+        for (int j = 1; j <= n; j++)
+            a[i][j] = oo;
+    for (int i = 1; i <= n; i++)a[i][i] = 0;
+
+    for (int i = 1; i <= m; i++) 
+	{
+        int p, q, w;
+        cin>>p>>q>>w;
+        a[p][q] = a[q][p] = w;
+    }
+
+    for (int k = 1; k <= n; k++)
+        for (int i = 1; i <= n; i++)
+            for (int j = 1; j <= n; j++)
+                minimize(a[i][j], a[i][k] + a[k][j]);
+
+    
+}
+
+ main() 
+{
+    xuly();
+    int t;cin>>t;
+    while(t--)
+    {
+    	int x,y;cin>>x>>y;
+    	cout<<a[x][y]<<endl;
+	}
+}
+//Di chuyen tren bang so
+#include <bits/stdc++.h>
+using namespace std;
+int n,m;
+struct cell
+{
+    int x, y;
+    int distance;
+    cell(int x, int y, int distance) :
+        x(x), y(y), distance(distance) {}
+};
+  
+bool operator<(const cell& a, const cell& b)
+{
+    if (a.distance == b.distance)
+    {
+        if (a.x != b.x)
+            return (a.x < b.x);
+        else
+            return (a.y < b.y);
+    }
+    return (a.distance < b.distance);
+}
+bool isInsideGrid(int i, int j)
+{
+    return (i >= 0 && i < n && j >= 0 && j < m);
+}
+int shortest(int grid[505][505], int row, int col)
+{
+    int dis[row][col];
+    for (int i = 0; i < row; i++)
+        for (int j = 0; j < col; j++)
+            dis[i][j] = INT_MAX;
+    int dx[] = {-1, 0, 1, 0};
+    int dy[] = {0, 1, 0, -1};
+  
+    set<cell> st;
+    st.insert(cell(0, 0, 0));
+    dis[0][0] = grid[0][0];
+    while (!st.empty())
+    {
+        cell k = *st.begin();
+        st.erase(st.begin());
+        for (int i = 0; i < 4; i++)
+        {
+            int x = k.x + dx[i];
+            int y = k.y + dy[i];
+            if (!isInsideGrid(x, y))
+                continue;
+  
+            if (dis[x][y] > dis[k.x][k.y] + grid[x][y])
+            {
+                if (dis[x][y] != INT_MAX)
+                    st.erase(st.find(cell(x, y, dis[x][y])));
+                dis[x][y] = dis[k.x][k.y] + grid[x][y];
+                st.insert(cell(x, y, dis[x][y]));
+            }
+        }
+    }
+    return dis[row - 1][col - 1];
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    int t;cin>>t;
+    while(t--)
+    {
+        cin>>n>>m;
+    	int a[505][505];
+    	for(int i=0;i<n;i++)
+    	{
+    		for(int j=0;j<m;j++) cin>>a[i][j];
+		}
+  
+    cout << shortest(a, n, m) << endl;
+	}
+    return 0;
+}
+//Kruskal
+#include <iostream>
+#include <vector>
+#include <algorithm> 
+#define N 10005
+using namespace std;
+struct edge {
+    int u, v, w;
+};
+
+bool cmp(const edge &a, const edge &b) {
+    return a.w < b.w;
+}
+
+
+
+int cha[N], hang[N];
+
+int find(int u) {
+    if (cha[u] != u) cha[u] = find(cha[u]);
+    return cha[u];
+}
+
+bool join(int u, int v) {
+    u = find(u); v = find(v);
+    if (u == v) return false;
+    if (hang[u] == hang[v]) hang[u]++;
+    if (hang[u] < hang[v]) cha[u] = v;
+    else cha[v]=u;
+    return true;
+}
+
+int main() {
+   
+    ios::sync_with_stdio(false); cin.tie(0);
+    int t;cin>>t;
+    while(t--)
+    {
+    int n, m; cin >> n >> m;
+
+    vector<edge> edges(m);
+    for (edge &e: edges) cin >> e.u >> e.v >> e.w;
+    sort(edges.begin(), edges.end(), cmp);
+    for (int i=1; i<=n; i++) {
+        cha[i] = i;
+        hang[i] = 0;
+    }
+    int ans = 0;
+
+    for (edge &e: edges) {
+        if (join(e.u, e.v)) {
+            
+            ans += e.w;
+        }
+    }
+    cout << ans<<endl;
+    }
+    return 0;
+}
+//Chu trinh am
+#include <iostream>
+#include <vector>
+#include <algorithm> 
+#define N 10005
+using namespace std;
+struct edge {
+    int u, v, w;
+};
+
+bool cmp(const edge &a, const edge &b) {
+    return a.w < b.w;
+}
+
+
+
+int cha[N], hang[N];
+
+int find(int u) {
+    if (cha[u] != u) cha[u] = find(cha[u]);
+    return cha[u];
+}
+
+bool join(int u, int v) {
+    u = find(u); v = find(v);
+    if (u == v) return false;
+    if (hang[u] == hang[v]) hang[u]++;
+    if (hang[u] < hang[v]) cha[u] = v;
+    else cha[v]=u;
+    return true;
+}
+
+int main() {
+   
+    ios::sync_with_stdio(false); cin.tie(0);
+    int t;cin>>t;
+    while(t--)
+    {
+    int n, m; cin >> n >> m;
+
+    vector<edge> edges(m);
+    for (edge &e: edges) cin >> e.u >> e.v >> e.w;
+    sort(edges.begin(), edges.end(), cmp);
+    for (int i=1; i<=n; i++) {
+        cha[i] = i;
+        hang[i] = 0;
+    }
+    int ans = 0;
+
+    for (edge &e: edges) {
+        if (join(e.u, e.v)) {
+            
+            ans += e.w;
+        }
+    }
+    cout << ans<<endl;
+    }
+    return 0;
+}
+//Duong di trung binh
+#include<bits/stdc++.h>
+using namespace std;
+vector<vector<int> >res;
+vector<int> chuaxet;
+
+int BFS(int u, int v)
+{
+    queue<pair<int, int> > q;
+	q.push({u, 0});
+	chuaxet[u] = true;
+	while(!q.empty())
+	{
+		auto P = q.front(); q.pop();
+		int node = P.first, step = P.second;
+		if(node == v) return step;
+		for(auto x: res[node])
+		{
+			if(chuaxet[x]) continue;
+			q.push({x, step + 1});
+			chuaxet[x] = true;
+		}
+	}
+	return -1;
+}
+ 
+ 
+void xuly()
+{
+	int n, m;
+	cin >> n >> m;
+	res.clear();
+	res.resize(n + 1);
+	chuaxet.assign(n + 1, false);
+	for(int i=0;i<m;i++)
+	{
+		int x, y;
+		cin >> x >> y;
+		res[x].push_back(y);
+	}
+ 	int count = 0, ans = 0;
+	for(int i=1;i<=n;i++)
+	{
+		for(int j=1;j<=n;j++)
+		{
+			if(i == j) continue;
+			chuaxet.assign(n + 1, false);
+			int dis = BFS(i, j);
+			if(dis == -1) continue;
+			ans += dis;
+			count++;
+		}
+	}
+	cout << setprecision(2) << fixed << ans * 1.0 / count << endl;
+ 
+}
+int main(){
+	int t;	
+	cin >> t; 
+ 
+	while(t--) xuly();
+ 
+	return 0;	
+}
+//Noi diem( mk chua lam:)) )

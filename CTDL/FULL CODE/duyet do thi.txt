@@ -1,0 +1,1906 @@
+// chuyen danh sach canh sang danh sach ke
+#include<bits/stdc++.h>
+#define max 1000
+using namespace std;
+int n,m;
+void in(int A[],int B[])
+{
+    for(int i=1;i<=n;i++){
+		cout<<i<<": ";
+		for(int j=1;j<=m;j++){
+			if(A[j]==i) cout<<B[j]<<" ";
+			if(B[j]==i) cout<<A[j]<<" ";
+		}
+		cout<<"\n";
+	}
+}
+int main(){
+	int t;
+	cin>>t;
+	while(t--){
+		cin>>n>>m;
+	int A[m+5],B[m+5];
+	for(int i=1;i<=m;i++) cin>>A[i]>>B[i];
+		in(A,B);
+	
+	}
+	return 0;
+}
+// chuyen danh sach ke sang danh sach canh
+#include <bits/stdc++.h> 
+using namespace std;
+
+int main() 
+{ 
+     int n;
+ 	string s;
+ 	cin>>n;
+ 	cin.ignore();
+ 	vector<int>k[100];
+ 	for(int i=1;i<=n;i++)
+ 	{
+ 		getline(cin,s);
+ 		s+=" ";
+ 		int tg=0;
+ 		int j=0;
+ 		while(j<s.size())
+ 		{
+ 			if(s[j]<='9'&&s[j]>='0') tg=tg*10+s[j]-'0';	
+ 			else if(tg>0)
+ 			{
+ 				k[i].push_back(tg);
+				 tg=0;	
+			}
+			j++;
+		}
+	 }
+	 for(int i=1;i<=n;i++) sort(k[i].begin(),k[i].end());
+	 int d[100][100];
+	 memset(d,0,sizeof(d));
+	 for(int i=1;i<=n;i++)
+	 {
+	 	for(int j=0;j<k[i].size();j++)
+	 	{
+	 		if(!d[i][k[i][j]]&&!d[k[i][j]][i])	cout<<i<<" "<<k[i][j]<<endl;
+	 		d[i][k[i][j]]=1;
+	 		d[k[i][j]][i]=1;
+		}
+	 }
+    
+}
+//Bieu dien do thi co huong
+#include <bits/stdc++.h> 
+using namespace std;
+
+int main() 
+{ 
+     int t;cin>>t;
+ 	while(t--)
+ 	{
+ 		int v,e;
+ 		cin>>v>>e;
+ 		vector<int> k[v+5];
+ 		for(int i=0;i<e;i++)
+ 		{
+ 			int a,b;cin>>a>>b;
+ 			k[a].push_back(b);
+ 			
+		}
+		for(int i=1;i<=v;i++) sort(k[i].begin(),k[i].end());
+		for(int i=1;i<=v;i++)
+		{
+			cout<<i<<":";
+			for(int j=0;j<k[i].size();j++)
+			cout<<" "<<k[i][j];
+			cout<<endl;
+		}
+	}
+    
+}
+//DFS tren do thi vo huong
+#include <bits/stdc++.h> 
+using namespace std;
+vector<int>k[1005];
+bool ok[1005];
+void xuly(int n)
+{
+    ok[n]=true;
+	cout<<n<<" ";
+
+		for(int i=0;i<k[n ].size();i++)
+		{
+			if(!ok[k[n][i]])
+			{
+				xuly(k[n][i]);
+			}
+		}
+	}
+
+
+int main() 
+{ 
+ 	int t;cin>>t;
+ 	while(t--)
+ 	{
+ 		for(int i=0;i<1001;i++) k[i].clear();
+ 		memset(ok,false,sizeof(ok));
+ 		int a,b,dich;
+ 		cin>>a>>b>>dich;
+ 		for(int i=0;i<b;i++)
+ 		{
+ 			int u,v;cin>>u>>v;
+ 			k[u].push_back(v);
+ 			k[v].push_back(u);
+		 }
+		 xuly(dich);
+		 cout<<endl;
+	}
+    
+}
+// LIỆT KÊ CẠNH CẦU VỚI BFS
+#include <bits/stdc++.h> 
+using namespace std;
+vector<int>k[1005];
+bool ok[1005];
+int truoc[1005];
+int a,b;
+vector< pair<int ,int> >ans;
+void Reset()
+{
+    	for(int i=0;i<1001;i++) k[i].clear();
+ 		memset(ok,false,sizeof(ok));
+}
+void BFS(int n)
+{
+	ok[n]=true;
+	for(int i=0;i<k[n].size();i++)
+	{
+		if(!ok[k[n][i]])
+		{
+			truoc[k[n][i]]=n;
+			BFS(k[n][i]);
+		}
+	}
+}
+int TPLT()
+{
+	int res=0;
+	for(int i=1;i<=a;i++)
+	{
+		if(!ok[i])
+		{
+			res++;
+			BFS(i);
+		}
+	}
+	return res;
+}
+void xuly(int canh,int res,vector< pair<int ,int> >tmp)
+{
+	for(int i=0;i<b;i++)
+	{
+		if(i!=canh)
+		{
+			k[tmp[i].first].push_back(tmp[i].second);
+			k[tmp[i].second].push_back(tmp[i].first);
+		}
+	}
+	int dem=TPLT();
+	if(dem>res)
+	{
+		if(tmp[canh].first<tmp[canh].second)
+		ans.push_back({tmp[canh].first,tmp[canh].second});
+		else ans.push_back({tmp[canh].second,tmp[canh].first});
+	}
+}
+
+int main() 
+{ 
+ 	int t;cin>>t;
+ 	while(t--)
+ 	{
+ 		Reset();
+ 		ans.clear();
+ 		cin>>a>>b;
+ 		vector< pair<int ,int> >tmp;
+ 		for(int i=0;i<b;i++)
+ 		{
+ 			int u,v;cin>>u>>v;
+ 			tmp.push_back({u,v});
+ 			k[u].push_back(v);
+ 			k[v].push_back(u);
+ 			
+		 }
+		 int res=TPLT();
+		 for(int canh=0;canh<b;canh++)
+		 {
+		 	Reset();
+		 	xuly(canh,res,tmp);
+		 }
+		 sort(ans.begin(),ans.end());
+		 for(int i=0;i<ans.size();i++)
+		 cout<<ans[i].first<<" "<<ans[i].second<<" ";
+		 cout<<endl;
+ 		
+	}
+    
+}
+//ĐƯỜNG ĐI VÀ CHU TRÌNH EULER VỚI ĐỒ THỊ VÔ HƯỚNG
+#include<iostream>
+#include<cstring>
+#include<queue>
+#include<stack>
+#include<vector>
+#include<algorithm>
+using namespace std;
+#define pii pair<int,int>
+vector<int>ke[1005];
+vector<int>ans;
+bool vs[10009];
+int e, v;
+void BFS(int u) {
+	queue<int>q;
+	q.push(u);
+	while (!q.empty()) {
+		int x = q.front();
+		q.pop();
+		vs[u] = true;
+		for (int i = 0; i < ke[x].size(); i++) {
+			if (!vs[ke[x][i]]) {
+				q.push(ke[x][i]);
+				vs[ke[x][i]] = true;
+			}
+		}
+	}
+}
+int xuly() {
+	int k = 0;
+	for (int i = 1; i <= v; i++) if (!vs[i]) {
+		k++;
+		BFS(i);
+	}
+	return k;
+}
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	int t;
+	cin >> t;
+	while (t--) {
+		int a, b;
+		ans.clear();
+		for (int i = 1; i < 1001; i++) ke[i].clear();
+		cin >> v >> e;
+		for (int i = 0; i < e; i++) {
+			cin >> a >> b;
+			ke[a].push_back(b);
+			ke[b].push_back(a);
+		}
+		memset(vs, false, sizeof(vs));
+		int number = xuly();
+		if (number == 1) {
+			int dem = 0;
+			for (int i = 1; i <= v; i++) {
+				if (ke[i].size() % 2) dem++;
+			}
+			if (dem == 0) cout << 2;
+			else if (dem == 2) cout << 1;
+			else cout << 0;
+		}
+		else cout << 0;
+		cout << endl;
+	}
+}
+//CHU TRÌNH EULER TRONG ĐỒ THỊ CÓ HƯỚNG
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<int>ke[1005];
+int ans[1009][1009];
+bool vs[10009];
+int e, v;
+void BFS(int u) {
+	queue<int>q;
+	q.push(u);
+	while (!q.empty()) {
+		int x = q.front();
+		q.pop();
+		vs[u] = true;
+		for (int i = 0; i < ke[x].size(); i++) {
+			if (!vs[ke[x][i]]) {
+				q.push(ke[x][i]);
+				vs[ke[x][i]] = true;
+			}
+		}
+	}
+}
+int xuly() {
+	int k = 0;
+	for (int i = 1; i <= v; i++) if (!vs[i]) {
+		k++;
+		BFS(i);
+	}
+	return k;
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	int t;
+	cin >> t;
+	while (t--) {
+		int a, b;
+		memset(ans, 0, sizeof(ans));
+		for (int i = 1; i < 1001; i++) ke[i].clear();
+		cin >> v >> e;
+		for (int i = 0; i < e; i++) {
+			cin >> a >> b;
+			ans[a][b] = 1;
+		}
+		memset(vs, false, sizeof(vs));
+		int dem=0, kt = 0,number=xuly();
+		if (number) {
+			for (int i = 1; i <= v; i++) {
+				int degv = 0, degr = 0;
+				for (int j = 1; j <= v; j++) {
+					if (ans[i][j]) degv++;
+					if (ans[j][i]) degr++;
+				}
+				if (degv == degr) dem++;
+				else kt++;
+			}
+			if (kt == 0 && dem == v) cout << 1;
+			else cout << 0;
+			cout << endl;
+		}
+		else cout << 0 << endl;
+	}
+}
+//CHUYỂN MA TRẬN KỀ SANG DANH SÁCH KỀ
+#include <bits/stdc++.h>
+using namespace std;
+main()
+{
+	int n;cin>>n;
+	int a[n+5][n+5];
+	for(int i=1;i<=n;i++){
+		for(int j=1;j<=n;j++)
+		{
+			cin>>a[i][j];
+		}
+	}
+	for(int i=1;i<=n;i++){
+		for(int j=1;j<=n;j++)
+		{
+			if(a[i][j]==1) cout<<j<<" ";
+		}
+		cout<<endl;
+	}
+}
+//CHUYỂN DANH SÁCH KỀ SANG MA TRẬN KỀ
+#include <bits/stdc++.h>
+using namespace std;
+int a[1005][1005]={};
+void xuly(string s,int x,int n)
+{
+	for(int i=0;i<s.size();i++)
+	{
+		int tmp=0;
+		while(s[i]<='9'&&s[i]>='0')
+		{
+			tmp=tmp*10+s[i]-'0';
+			i++;
+		}
+		if(tmp<n && tmp>0)
+		{
+			a[x][tmp-1]=1;
+			a[tmp-1][x]=1;
+		}
+		
+	}
+}
+main()
+{
+	ios_base::sync_with_stdio(0);cin.tie();cout.tie();
+	int n;cin>>n;
+	cin.ignore();
+	for(int i=0;i<n;i++)
+	{
+		string s="";
+		while(s=="") getline(cin,s);
+		
+		xuly(s,i,n);
+	}
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++) cout<<a[i][j]<<" ";
+		cout<<endl;
+	}
+	
+}
+ //DFS TRÊN ĐỒ THỊ CÓ HƯỚNG
+#include <bits/stdc++.h>
+using namespace std;
+int n,m,u;
+bool vs[1005];
+vector <int> List[1005];
+void DFS(int u){
+	vs[u]=false; cout<<u<<" ";
+	for(int i=0;i<List[u].size();i++){
+		int v=List[u][i];
+		if(vs[v]) DFS(v);
+	}
+}
+main(){
+	cin.tie(0);
+	ios_base::sync_with_stdio(false);
+	cout.tie(0);
+	int t,x,y; cin>>t;
+	while(t--){
+		for(int i=0;i<1005;i++) List[i].clear();
+		memset(vs,true,sizeof(vs));
+		cin>>n>>m>>u;
+		for(int i=1;i<=m;i++){
+			cin>>x>>y;
+			List[x].push_back(y);
+		}
+		DFS(u);
+		cout<<endl;
+	}
+}
+// BFS TRÊN ĐỒ THỊ CÓ HƯỚNG
+#include <bits/stdc++.h> 
+using namespace std;
+vector<int> res[1005];
+bool OK[1005];
+void xuly(int k)
+{
+	queue<int> q;
+	q.push(k);
+	OK[k]=true;
+	cout<<k<<" ";
+	while(q.size()>0)
+	{
+		int top=q.front();q.pop();
+		
+		for(int i=0;i<res[top].size();i++)
+		{
+			if(!OK[res[top][i]])
+			{
+				OK[res[top][i]]=true;
+				q.push(res[top][i]);
+				cout<<res[top][i]<<" ";
+			}
+		}
+		
+	}
+}
+main()
+{
+	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(OK,false,sizeof(OK));
+		int a,b,c;
+		cin>>a>>b>>c;
+		for(int i=0;i<b;i++)
+		{
+			int u,v;
+			cin>>u>>v;
+			res[u].push_back(v);
+			
+		}
+		xuly(c);
+		cout<<endl;	
+	}
+}
+//TÌM ĐƯỜNG ĐI THEO DFS VỚI ĐỒ THỊ CÓ HƯỚNG
+#include <bits/stdc++.h>
+using namespace std;
+int n,m,u,t;
+bool vs[1005],ok;
+vector <int> List[1005];
+void DFS(int u,vector <int> res) {
+	vs[u]=false;
+	res.push_back(u);
+	if(u==t) {
+		ok=true;
+		for(int i=0;i<res.size();i++)
+		cout<<res[i]<<" ";
+		cout<<endl; 
+		return;
+	}
+	for(int i=0; i<List[u].size(); i++) {
+		int v=List[u][i];
+		if(vs[v]) DFS(v,res);
+		if(ok) return;
+	}
+}
+main() {
+	cin.tie(0);
+	ios_base::sync_with_stdio(false);
+	cout.tie(0);
+	int T,x,y;
+	cin>>T;
+	while(T--) {
+		ok=false;
+		for(int i=0; i<1005; i++) List[i].clear();
+		memset(vs,true,sizeof(vs));
+		cin>>n>>m>>u>>t;
+		for(int i=1; i<=m; i++) {
+			cin>>x>>y;
+			List[x].push_back(y);
+		}
+		vector <int> res;
+		DFS(u,res);
+		if(!ok) cout<<-1<<endl;
+	}
+}
+ //ĐƯỜNG THI THEO BFS TRÊN ĐỒ THỊ CÓ HƯỚNG
+#include <bits/stdc++.h>
+using namespace std;
+int n,m,u,t;
+vector <int> List[1005];
+int pre[1005];
+bool vs[1005],ok;
+
+void In() {
+	stack <int> st;
+	st.push(t);
+	int tmp=t;
+	while(pre[tmp]!=u) {
+		tmp=pre[tmp];
+		st.push(tmp);
+	}
+	cout<<u<<" ";
+	while(!st.empty()) {
+		cout<<st.top()<<" ";
+		st.pop();
+	}
+	cout<<endl;
+}
+void BFS(int u) {
+	vs[u]=false;
+	queue <int> q;
+	q.push(u);
+	while(!q.empty()) {
+		int x=q.front();
+		q.pop();
+		for(int i=0; i<List[x].size(); i++) {
+			int v=List[x][i];
+			if(v==t) {
+				ok=true;
+				pre[t]=x;
+				In();
+				return;
+			}
+			if(vs[v]) {
+				pre[v]=x;
+				vs[v]=false;
+				q.push(v);
+			}
+		}
+	}
+}
+main() {
+	cin.tie(0);
+	ios_base::sync_with_stdio(false);
+	cout.tie(0);
+	int T,x,y;
+	cin>>T;
+	while(T--) {
+		ok=false;
+		for(int i=0; i<1005; i++) List[i].clear();
+		memset(vs,true,sizeof(vs));
+		cin>>n>>m>>u>>t;
+		for(int i=0; i<m; i++) {
+			cin>>x>>y;
+			List[x].push_back(y);
+		}
+		BFS(u);
+		if(!ok)
+		cout<<-1<<endl;
+	}
+}
+ //KIỂM TRA ĐƯỜNG ĐI
+#include<bits/stdc++.h>
+using namespace std;
+bool vs[1005];
+vector<int> List[1005];
+int m,n;
+void DFS(int u) {
+	int v,i;
+	vs[u]=false;
+	for(i=0; i<List[u].size(); i++) {
+		v = List[u][i];
+		if(vs[v]) DFS(v);
+	}
+}
+main() {
+	cin.tie(0);
+	ios_base::sync_with_stdio(false);
+	cout.tie(0);
+	int t,u,v,q;
+	cin>>t;
+	while(t--) {
+		for(int i=0; i<1005; i++)	List[i].clear();
+		cin>>n>>m;
+		for(int i=0; i<m; i++) {
+			cin>>u>>v;
+			List[u].push_back(v);
+			List[v].push_back(u);
+		}
+		cin>>q;
+		while(q--) {
+			memset(vs,true,sizeof(vs));
+			cin>>u>>v;
+			DFS(u);
+			if(vs[v]) cout<<"NO"<<endl;
+			else cout<<"YES"<<endl;
+		}
+	}
+}
+
+//BFS TRÊN ĐỒ THỊ VÔ HƯỚNG
+#include <bits/stdc++.h> 
+using namespace std;
+vector<int> res[1005];
+bool OK[1005];
+void xuly(int k)
+{
+	queue<int> q;
+	q.push(k);
+	while(q.size()>0)
+	{
+		int top=q.front();q.pop();
+		cout<<top<<" ";
+		OK[top]=true;
+		for(int i=0;i<res[top].size();i++)
+		{
+			if(!OK[res[top][i]])
+			{
+				OK[res[top][i]]=true;
+				q.push(res[top][i]);
+			}
+		}
+		
+	}
+}
+main()
+{
+	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(OK,false,sizeof(OK));
+		int a,b,c;
+		cin>>a>>b>>c;
+		for(int i=0;i<b;i++)
+		{
+			int u,v;
+			cin>>u>>v;
+			res[u].push_back(v);
+			res[v].push_back(u);
+		}
+		xuly(c);
+		cout<<endl;	
+	}
+}
+//ĐƯỜNG ĐI THEO DFS VỚI ĐỒ THỊ VÔ HƯỚNG
+#include <bits/stdc++.h> 
+using namespace std;
+vector<int> res[1005];
+bool OK[1005];
+int check[1005];
+void xuly(int x,int y)
+{
+	if(OK[y]) return;
+	OK[x]=true;
+	for(int i=0;i<res[x].size();i++)
+		{
+			if(!OK[res[x][i]])
+			{
+				check[res[x][i]]=x;
+				xuly(res[x][i],y);
+			}
+		}
+		
+}
+
+void Truyvet(int x,int y)
+{
+	if(!OK[y]) 
+	{
+		cout<<-1;
+		return;
+	}
+	vector<int> a;
+	while(x!=y)
+	{
+		a.push_back(x);
+		x=check[x];	
+	}
+	a.push_back(y);
+
+	for(int i=a.size()-1;i>=0;i--) cout<<a[i]<<" ";
+}
+main()
+{
+	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(OK,false,sizeof(OK));
+		memset(check,0,sizeof(check));
+		int a,b,c,d;
+		cin>>a>>b>>c>>d;
+		for(int i=0;i<b;i++)
+		{
+			int u,v;
+			cin>>u>>v;
+			res[u].push_back(v);
+			res[v].push_back(u);
+		}
+		xuly(c,d);
+		Truyvet(d,c);
+		cout<<endl;	
+	}
+}
+ //ĐƯỜNG ĐI THEO BFS TRÊN ĐỒ THỊ VÔ HƯỚNG
+#include <bits/stdc++.h> 
+using namespace std;
+vector<int> res[1005];
+bool OK[1005];
+int check[1005];
+void xuly(int x,int y)
+{
+	queue<int> q;
+	q.push(x);
+	while(q.size()>0)
+	{
+		int top=q.front();q.pop();
+		OK[top]=true;
+		if(top==y) return;
+		for(int i=0;i<res[top].size();i++)
+		{
+			if(!OK[res[top][i]])
+			{
+				OK[res[top][i]]=true;
+				check[res[top][i]]=top;
+				q.push(res[top][i]);
+			}
+		}
+		
+	}
+}
+
+void Truyvet(int x,int y)
+{
+	if(!OK[y]) 
+	{
+		cout<<-1;
+		return;
+	}
+	vector<int> a;
+	while(x!=y)
+	{
+		a.push_back(x);
+		x=check[x];	
+	}
+	a.push_back(y);
+
+	for(int i=a.size()-1;i>=0;i--) cout<<a[i]<<" ";
+}
+main()
+{
+	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(OK,false,sizeof(OK));
+		memset(check,0,sizeof(check));
+		int a,b,c,d;
+		cin>>a>>b>>c>>d;
+		for(int i=0;i<b;i++)
+		{
+			int u,v;
+			cin>>u>>v;
+			res[u].push_back(v);
+			res[v].push_back(u);
+		}
+		xuly(c,d);
+		Truyvet(d,c);
+	cout<<endl;
+	}
+}
+//ĐẾM SỐ THÀNH PHẦN LIÊN THÔNG
+#include <bits/stdc++.h> 
+using namespace std;
+vector<int> res[1005];
+bool OK[1005];
+void xuly(int k)
+{
+	queue<int> q;
+	q.push(k);
+	while(q.size()>0)
+	{
+		int top=q.front();q.pop();
+		
+		OK[top]=true;
+		for(int i=0;i<res[top].size();i++)
+		{
+			if(!OK[res[top][i]])
+			{
+				OK[res[top][i]]=true;
+				q.push(res[top][i]);
+			}
+		}
+		
+	}
+}
+main()
+{
+	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(OK,false,sizeof(OK));
+		int a,b;
+		cin>>a>>b;
+		for(int i=0;i<b;i++)
+		{
+			int u,v;
+			cin>>u>>v;
+			res[u].push_back(v);
+			res[v].push_back(u);
+		}
+		int res=0;
+		for(int i=1;i<=a;i++)
+		{
+			if(!OK[i])
+			{
+				res++;
+				xuly(i);
+			}
+		}
+		cout<<res;
+		cout<<endl;	
+	}
+}
+//TÌM SỐ THÀNH PHẦN LIÊN THÔNG VỚI BFS
+#include <bits/stdc++.h> 
+using namespace std;
+vector<int> res[1005];
+bool OK[1005];
+void xuly(int k)
+{
+	queue<int> q;
+	q.push(k);
+	while(q.size()>0)
+	{
+		int top=q.front();q.pop();
+		
+		OK[top]=true;
+		for(int i=0;i<res[top].size();i++)
+		{
+			if(!OK[res[top][i]])
+			{
+				OK[res[top][i]]=true;
+				q.push(res[top][i]);
+			}
+		}
+		
+	}
+}
+main()
+{
+	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(OK,false,sizeof(OK));
+		int a,b;
+		cin>>a>>b;
+		for(int i=0;i<b;i++)
+		{
+			int u,v;
+			cin>>u>>v;
+			res[u].push_back(v);
+			res[v].push_back(u);
+		}
+		int res=0;
+		for(int i=1;i<=a;i++)
+		{
+			if(!OK[i])
+			{
+				res++;
+				xuly(i);
+			}
+		}
+		cout<<res;
+		cout<<endl;	
+	}
+}
+//KIỂM TRA TÍNH LIÊN THÔNG MẠNH VỚI BFS
+#include <bits/stdc++.h> 
+using namespace std;
+vector<int> res[1005];
+bool OK[1005];
+void xuly(int k)
+{
+	queue<int> q;
+	q.push(k);
+	while(q.size()>0)
+	{
+		int top=q.front();q.pop();
+		
+		OK[top]=true;
+		for(int i=0;i<res[top].size();i++)
+		{
+			if(!OK[res[top][i]])
+			{
+				OK[res[top][i]]=true;
+				q.push(res[top][i]);
+			}
+		}
+		
+	}
+}
+main()
+{
+	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(OK,false,sizeof(OK));
+		int a,b;
+		cin>>a>>b;
+		for(int i=0;i<b;i++)
+		{
+			int u,v;
+			cin>>u>>v;
+			res[u].push_back(v);
+		//	res[v].push_back(u);
+		}
+		int res=0;
+		for(int i=1;i<=a;i++)
+		{
+			if(!OK[i])
+			{
+				res++;
+				xuly(i);
+			}
+		}
+	
+	if(res>=2) cout<<"NO";
+	else cout<<"YES";
+	
+		cout<<endl;	
+	}
+}
+//LIỆT KÊ ĐỈNH TRỤ VỚI BFS
+#include <bits/stdc++.h> 
+using namespace std;
+vector<int> res[1005];
+bool OK[1005];
+void xuly(int k)
+{
+	queue<int> q;
+	q.push(k);
+	while(q.size()>0)
+	{
+		int top=q.front();q.pop();
+		
+		OK[top]=true;
+		for(int i=0;i<res[top].size();i++)
+		{
+			if(!OK[res[top][i]])
+			{
+				OK[res[top][i]]=true;
+				q.push(res[top][i]);
+			}
+		}
+		
+	}
+}
+main()
+{
+	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(OK,false,sizeof(OK));
+		int a,b;
+		cin>>a>>b;
+		for(int i=0;i<b;i++)
+		{
+			int u,v;
+			cin>>u>>v;
+			res[u].push_back(v);
+			res[v].push_back(u);
+		}
+		int res=0;
+		for(int i=1;i<=a;i++)
+		{
+			if(!OK[i])
+			{
+				res++;
+				xuly(i);
+			}
+		}
+	
+		for(int i=1;i<=a;i++)
+		{
+			memset(OK,false,sizeof(OK));
+			OK[i]=true;
+				int dem=0;
+			for(int j=1;j<=a;j++)
+			{
+				if(!OK[j])
+				{
+					dem++;
+					xuly(j);
+				}
+			}
+			if(dem>res) cout<<i<<" ";
+		}
+	
+		cout<<endl;	
+	}
+}
+//KIỂM TRA CHU TRÌNH VỚI BFS
+#include<bits/stdc++.h>
+using namespace std;
+bool chuaxet[1005];
+int check[1005];
+vector<int> res[1005];
+bool DFS(int s,int v)
+{
+	queue<int> q;q.push(s);
+	chuaxet[s]=true;
+	while(!q.empty())
+	{
+		s=q.front();q.pop();
+		for(int i=0;i<res[s].size();i++)
+		{
+			if(!chuaxet[res[s][i]])
+			{
+				chuaxet[res[s][i]]=true;
+				check[res[s][i]]=s;
+				q.push(res[s][i]);
+				
+			}
+			else if(check[s]!=res[s][i]) return true;
+		}
+	}
+	return false;
+}
+bool xuly(int v)
+{
+	//bool chuaxet[v]={};
+	for(int i=0;i<v;i++) 
+	{
+			if(!chuaxet[i]&& DFS(i,v)) return true;
+	}
+
+	return false;
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(chuaxet,false,sizeof(chuaxet));
+		memset(check,0,sizeof(check));
+		int m,n;cin>>m>>n;
+		while(n--)
+		{
+			int u,v;cin>>u>>v;
+			res[u].push_back(v);
+			res[v].push_back(u);
+		}
+		if(xuly(m)) cout<<"YES";
+		else cout<<"NO";
+		cout<<endl;
+	}
+}
+//KIỂM TRA CHU TRÌNH SỬ DỤNG DISJOIN SET
+#include<bits/stdc++.h>
+using namespace std;
+bool DFS(int s,int v,vector< vector<int> >list,bool* chuaxet)
+{
+	vector<int> a(v,-1);
+	queue<int> q;q.push(s);
+	chuaxet[s]=true;
+	while(!q.empty())
+	{
+		s=q.front();q.pop();
+		for(int i=0;i<list[s].size();i++)
+		{
+			if(!chuaxet[list[s][i]])
+			{
+				chuaxet[list[s][i]]=true;
+				a[list[s][i]]=s;
+				q.push(list[s][i]);
+				
+			}
+			else if(a[s]!=list[s][i]) return true;
+		}
+	}
+	return false;
+}
+bool xuly(int v,vector< vector<int> >list)
+{
+	bool chuaxet[v]={};
+	for(int i=0;i<v;i++) 
+	{
+			if(!chuaxet[i]&& DFS (i,v,list,chuaxet)) return true;
+	}
+
+	return false;
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int m,n;cin>>m>>n;
+		vector< vector<int> > list(m,vector<int>());
+		while(n--)
+		{
+			int u,v;cin>>u>>v;
+			list[u-1].push_back(v-1);
+			list[v-1].push_back(u-1);
+		}
+		if(xuly(m,list)) cout<<"YES";
+		else cout<<"NO";
+		cout<<endl;
+	}
+}
+ //KIỂM TRA CHU TRÌNH TRÊN ĐỒ THỊ CÓ HƯỚNG VỚI DFS
+#include<bits/stdc++.h>
+using namespace std;
+vector<vector<int>> adj;
+vector<bool> vis;
+bool ans = false;
+vector<int> usingg;
+ 
+void dfs(int u){
+	vis[u] = true;
+	for(auto x: adj[u]){
+		if(vis[x]){
+			if(usingg[x]) ans = true;
+			continue;
+		}
+		usingg[x] = true;
+		dfs(x);
+		usingg[x] = false;
+	}
+}
+ 
+ 
+void solution(){
+ 
+	int n, m;
+	cin >> n >> m;
+	adj.clear();
+	adj.resize(n + 1);
+	vis.assign(n + 1, false);
+	usingg.assign(n + 1, false);
+ 
+	for(int i=0;i<m;i++){
+		int x, y;
+		cin >> x >> y;
+		adj[x].push_back(y);
+	}
+ 
+	ans = false;
+	for(int i=1;i<=n;i++){
+		if(vis[i]) continue;
+		usingg[i] = true;
+		dfs(i);
+		usingg[i] = false;
+	}
+	cout << (ans? "YES" : "NO") << endl;
+}
+ 
+
+int main(){
+
+ 
+	int test = 1;	
+	cin >> test; cin.ignore();	
+ 
+	while(test--) solution();
+ 
+	return 0;	
+}
+ //KIỂM TRA CHU TRÌNH TRÊN ĐỒ THỊ CÓ HƯỚNG VỚI BFS
+#include<bits/stdc++.h>
+using namespace std;
+vector<vector<int>> adj;
+vector<bool> vis;
+bool ans = false;
+vector<int> usingg;
+ 
+void dfs(int u){
+	vis[u] = true;
+	for(auto x: adj[u]){
+		if(vis[x]){
+			if(usingg[x]) ans = true;
+			continue;
+		}
+		usingg[x] = true;
+		dfs(x);
+		usingg[x] = false;
+	}
+}
+ 
+ 
+void solution(){
+ 
+	int n, m;
+	cin >> n >> m;
+	adj.clear();
+	adj.resize(n + 1);
+	vis.assign(n + 1, false);
+	usingg.assign(n + 1, false);
+ 
+	for(int i=0;i<m;i++){
+		int x, y;
+		cin >> x >> y;
+		adj[x].push_back(y);
+	}
+ 
+	ans = false;
+	for(int i=1;i<=n;i++){
+		if(vis[i]) continue;
+		usingg[i] = true;
+		dfs(i);
+		usingg[i] = false;
+	}
+	cout << (ans? "YES" : "NO") << endl;
+}
+ 
+
+int main(){
+
+ 
+	int test = 1;	
+	cin >> test; cin.ignore();	
+ 
+	while(test--) solution();
+ 
+	return 0;	
+}
+ //KIỂM TRA ĐỒ THỊ CÓ PHẢI LÀ CÂY HAY KHÔNG
+#include<bits/stdc++.h>
+using namespace std;
+bool chuaxet[1005];
+int check[1005];
+vector<int> res[1005];
+bool DFS(int s,int v)
+{
+	queue<int> q;q.push(s);
+	chuaxet[s]=true;
+	while(!q.empty())
+	{
+		s=q.front();q.pop();
+		for(int i=0;i<res[s].size();i++)
+		{
+			if(!chuaxet[res[s][i]])
+			{
+				chuaxet[res[s][i]]=true;
+				check[res[s][i]]=s;
+				q.push(res[s][i]);
+				
+			}
+			else if(check[s]!=res[s][i]) return true;
+		}
+	}
+	return false;
+}
+bool xuly(int v)
+{
+	//bool chuaxet[v]={};
+	for(int i=0;i<v;i++) 
+	{
+			if(!chuaxet[i]&& DFS(i,v)) return true;
+	}
+
+	return false;
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		for(int i=0;i<1005;i++) res[i].clear();
+		memset(chuaxet,false,sizeof(chuaxet));
+		memset(check,0,sizeof(check));
+		int m;cin>>m;
+		for(int i=1;i<m;i++)
+		{
+			int u,v;cin>>u>>v;
+			res[u].push_back(v);
+			res[v].push_back(u);
+		}
+		if(xuly(m)) cout<<"NO";
+		else cout<<"YES";
+		cout<<endl;
+	}
+}
+//So luong hon dao
+#include <bits/stdc++.h> 
+using namespace std; 
+  
+
+  
+int isSafe(int M[][505], int row, int col, 
+           bool visited[][505],int m,int n) 
+{ 
+
+    return (row >= 0) && (row < m) && (col >= 0) && (col < n) && (M[row][col] && !visited[row][col]); 
+} 
+void DFS(int M[][505], int row, int col, bool visited[][505],int m,int n) 
+{ 
+    static int rowNbr[] = { -1, -1, -1, 0, 0, 1, 1, 1 }; 
+    static int colNbr[] = { -1, 0, 1, -1, 1, -1, 0, 1 }; 
+  
+    visited[row][col] = true; 
+    for (int k = 0; k < 8; ++k) 
+        if (isSafe(M, row + rowNbr[k], col + colNbr[k], visited,m,n)) 
+            DFS(M, row + rowNbr[k], col + colNbr[k], visited,m,n); 
+} 
+ 
+int countIslands(int M[][505],int m,int n) 
+{ 
+    bool visited[505][505]; 
+    memset(visited, 0, sizeof(visited)); 
+    int count = 0; 
+    for (int i = 0; i < m; ++i) 
+        for (int j = 0; j <n; ++j) 
+            if (M[i][j] && !visited[i][j]) { 
+                DFS(M, i, j, visited,m,n); 
+                ++count; 
+            } 
+  
+    return count; 
+} 
+   
+int main() 
+{ 
+    int t;cin>>t;
+	while(t--)
+	{
+		int m,n;cin>>m>>n;
+		int a[505][505];
+		for(int i=0;i<m;i++)
+		{
+			for(int j=0;j<n;j++) cin>>a[i][j];
+		}
+   
+    cout << countIslands(a,m,n)<<endl; 
+    }
+  
+   
+}
+//Ket ban
+#include<bits/stdc++.h>
+using namespace std;
+bool chuaxet[100005];
+vector<int> res[100005];
+int BFS(int s,int v)
+{
+    queue<int> q;q.push(s);
+	chuaxet[s]=true;
+	int dem=1;
+	while(!q.empty())
+	{
+		s=q.front();q.pop();
+		for(int i=0;i<res[s].size();i++)
+		{
+			if(!chuaxet[res[s][i]])
+			{
+				dem=dem+1;
+				q.push(res[s][i]);
+				chuaxet[res[s][i]]=true;
+				
+				
+			}
+		}
+	}
+	return dem;
+}
+int xuly(int v)
+{
+	int kq=0;
+	for(int i=0;i<v;i++) 
+	{
+			if(!chuaxet[i]) 
+			{
+				int tg=BFS(i,v);
+				kq=(kq<tg)?tg:kq;
+			}
+	}
+
+	return kq;
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int m,n;cin>>m>>n;
+		for(int i=0;i<100005;i++) res[i].clear();
+		memset(chuaxet,false,sizeof(chuaxet));
+		while(n--)
+		{
+			int u,v;cin>>u>>v;
+			res[u].push_back(v);
+			res[v].push_back(u);
+		}
+		cout<<xuly(m)<<endl;
+	}
+}
+//To mau do thi
+#include <bits/stdc++.h>
+using namespace std;
+int check(int k,int c,vector<int>*a,int color[])
+{
+    for(int i=0;i<a[k].size();i++)
+	if(color[a[k][i]]==c) return 0;
+	return 1;
+}
+int Try(int k,int v,int m,vector<int>*a,int color[])
+{
+	if(k==v) return 1;
+	for(int i=1;i<=m;i++)
+	{
+		if(check(k,i,a,color))
+		{
+			color[k]=i;
+			if(Try(k+1,v,m,a,color)) return 1;
+			color[k]=0;
+		}
+	}
+	return 0;
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int v,e,m;cin>>v>>e>>m;
+		int color[v+5]={};
+		vector<int>a[v+5];
+		for(int i=0;i<e;i++)
+		{
+			int p,q;
+			cin>>p>>q;
+			a[p-1].push_back(q-1);
+			a[q-1].push_back(p-1);
+		}
+		if(Try(0,v,m,a,color)) cout<<"YES";
+		else cout<<"NO";
+		cout<<endl;
+	}
+}
+//Duong di Hamilton
+#include <bits/stdc++.h>
+using namespace std;
+vector<int> list_v[1005];
+bool visited[1005], hasHalPath;
+int X[1005];
+int v, e, u, u1;
+void Hal(int k) {
+    for (int i = 0; i < list_v[X[k-1]].size(); i++) {
+		int y = list_v[X[k-1]][i];
+		if (hasHalPath) return;
+		if (k == v+1) {
+			hasHalPath = true;
+			return;
+		} else if (visited[y] == false) {
+			X[k] = y;
+			visited[y] = true;
+			Hal(k+1);
+			visited[y] = false;
+		}
+	}
+}
+bool Hamilton(int u) {
+	visited[u] = true;
+	X[1] = u;
+	Hal(2);
+	return hasHalPath;
+}
+int main() {
+	int t = 1;
+	cin >> t;
+	while (t--) {
+		int a, b;
+		cin >> v >> e;
+		for(int i=1; i<=v; i++) {
+			list_v[i].clear();
+			visited[i] = false;
+			hasHalPath = false;
+		}
+		for(int i=0; i<e; i++) {
+			cin >> a >> b;
+			list_v[a].push_back(b);
+			list_v[b].push_back(a);
+		}
+		bool ok=false;
+		for(int i=1; i<=v; i++) {
+			if (Hamilton(i)) {
+				cout << 1 << endl;
+				ok=true;
+				break;
+			}
+		}
+		if(!ok)
+			cout << 0 << endl;
+	}
+	return 0;
+}
+//Do thi hai phia
+#include <bits/stdc++.h>
+using namespace std;
+int check(int i,int v,vector<int>*a,int color[])
+{
+    color[i]=1;
+	queue<int> q;q.push(i);
+	while(!q.empty())
+	{
+		int u=q.front();q.pop();
+		for(int i=0;i<a[u].size();i++)
+		{
+			if(color[a[u][i]]==0)
+			{
+				color[a[u][i]]=(color[u]==1) ?2:1;
+				q.push(a[u][i]);
+			}
+			else{
+				if(color[u]==color[a[u][i]]) return 0;
+			}
+		}
+	}
+	return 1;
+}
+int xuly(int v,vector<int>*a)
+{
+	int color[v]={};
+	for(int i=0;i<v;i++)
+	{
+		if(color[i]==0)
+		if(!check(i,v,a,color)) return 0;
+	}
+	return 1;
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int v,e;cin>>v>>e;
+	//	int color[v+5]={};
+		vector<int>a[v+5];
+		for(int i=0;i<e;i++)
+		{
+			int p,q;
+			cin>>p>>q;
+			a[p-1].push_back(q-1);
+			a[q-1].push_back(p-1);
+		}
+		if(xuly(v,a)) cout<<"YES";
+		else cout<<"NO";
+		cout<<endl;
+	}
+}
+//Mang xa hoi
+#include <bits/stdc++.h>
+using namespace std;
+void bfs(int s,int v,int e,vector<vector<int> >List,bool chuaxet[])
+{
+    queue<int>q;q.push(s);
+	chuaxet[s]=true;
+	while(!q.empty())
+	{
+		s=q.front();q.pop();
+		for(int i=0;i<List[s].size();i++)
+		{
+			if(!chuaxet[List[s][i]])
+			{
+				q.push(List[s][i]);
+				chuaxet[List[s][i]]=true;
+			}
+		}
+	}
+}
+int Timkiem(vector<int>a,int x)
+{
+	for(int i=0;i<a.size();i++)
+	{
+		if(a[i]==x) return 1;
+	}
+	return 0;
+}
+int xuly(int v,int e,vector<vector<int> >List)
+{
+	for(int i=0;i<v;i++)
+	{
+		bool chuaxet[v+5]={};
+		bfs(i,v,e,List,chuaxet);
+		for(int j=0;j<v;j++)
+		{
+			if(j!=i&& chuaxet[j]&& !Timkiem(List[i],j)) return 0;
+		}
+	}
+	return 1;
+}
+main()
+{
+	int t;cin>>t;
+	while(t--)
+	{
+		int v,e;cin>>v>>e;
+		vector<vector<int> > List(v,vector<int>());
+		for(int i=0;i<e;i++)
+		{
+			int a,b;cin>>a>>b;
+			List[a-1].push_back(b-1);
+			List[b-1].push_back(a-1);
+		}
+		if(xuly(v,e,List)) cout<<"YES";
+		else cout<<"NO";
+		cout<<endl;
+	}
+}
+//Giay khai sinh
+#include <bits/stdc++.h>
+
+using namespace std;
+#define ll        long long
+#define pii       pair<int, int>
+#define MIN       INT_MIN
+#define MAX       LLONG_MAX
+#define er              erase
+#define pb              push_back
+#define eleV            vector <ele>
+#define all(vec)        vec.begin(), vec.end()
+#define rs(A,x)         memset(A, x, sizeof(A))
+#define Unique(C)       C.erase(unique(C.begin(), C.end()), C.end())
+#define pq(x)           priority_queue<x>
+#define neg_pq(x)       priority_queue<x, vector<x>, greater<x>>
+#define FOR(i, m, n)    for(int i = m; i < n; ++i)
+#define FORx(i,m,n,x)   for(int i = m; i < n; i += x)
+#define FORD(i, m, n)   for(int i = m; i >= n; --i)
+#define get(C,a)        FOR(i, 0, a) cin >> C[i]
+#define print(C,a)      FOR(i, 0, a) cout << C[i]
+#define faster()        cin.tie(0); ios_base::sync_with_stdio(false); cout.tie(0);
+#define run()           int t; cin >> t; while (t--)
+
+struct Node
+{
+    string parent, name;
+    int age;
+    vector<string> children;
+};
+map<string, Node> graphFamily;
+vector<Node> dataSet;
+
+Node createNode(string pr, string nm, int age)
+{
+    Node node;
+    node.age = age;
+    node.parent = pr;
+    node.name = nm;
+    node.children.clear();
+    return node;
+}
+void init()
+{
+    graphFamily.clear();
+    graphFamily.insert(pair<string, Node>("Ted", createNode("Root", "Ted", 100)));
+    dataSet.clear();
+}
+void getData(string s)
+{
+    stringstream ss(s);
+    string pr; ss >> pr;
+    string child; ss >> child;
+    int diffAge; ss >> diffAge;
+    if (graphFamily.find(pr) == graphFamily.end()) {
+        graphFamily.insert(pair<string, Node>(pr, createNode("", pr, 0)));
+
+    }
+    if (graphFamily.find(child) == graphFamily.end()) {
+        graphFamily.insert(pair<string, Node>(child, createNode("", child, 0)));
+
+    }
+    graphFamily[pr].children.push_back(child);
+    graphFamily[child].parent = pr;
+    graphFamily[child].age -= diffAge;
+}
+void show(Node node)
+{
+
+    cout << node.name << " " << node.age;
+    cout << endl;
+}
+void BFS()
+{
+    queue<string> q;
+    q.push("Ted");
+    while (!q.empty()) {
+        string pr = q.front(); q.pop();
+        Node prNode = graphFamily[pr];
+        for (auto i : prNode.children) {
+            graphFamily[i].age += prNode.age;
+            dataSet.push_back(graphFamily[i]);
+            q.push(i);
+        }
+    }
+}
+bool cmp(Node node1, Node node2)
+{
+    if (node1.age == node2.age) {
+        return node1.name.compare(node2.name) < 0;
+    }
+    else {
+        return node1.age > node2.age;
+    }
+}
+void showDataSet()
+{
+    sort(dataSet.begin(), dataSet.end(), cmp);
+    for (auto i : dataSet) {
+        show(i);
+    }
+}
+void process()
+{
+    int n;
+    init();
+    cin >> n; cin.ignore();
+    FOR(i, 0, n) {
+        string s;
+        getline(cin, s);
+        getData(s);
+    }
+
+    BFS();
+    showDataSet();
+
+}
+int main()
+{
+    int t = 1;
+    cin >> t;
+    FOR(i, 1, t+1)
+    {
+        cout << "DATASET " << i << endl;
+        process();
+    }
+    return 0;
+}
+//Chu cuu xa cach
+#include<bits/stdc++.h>
+using namespace std;
+#define ii pair<int,int>
+#define pii pair< pair<int, int>, pair<int, int> >
+#define fi first
+#define se second
+int dx[]={-1,1,0,0};
+int dy[]={0,0,1,-1};
+int visited[105][105];
+int N,K,M;
+vector<ii> v;
+set< pair< ii, ii > > mySet;
+bool inSide(int x, int y){
+    return (x >= 1 && x <= N && y >= 1 && y <= N);
+}
+void BFS(ii u){
+	queue<ii> q;
+	q.push(u);
+	visited[u.fi][u.se] = 1;
+	while(!q.empty()){
+		ii t=q.front();
+		int u=t.fi;
+		int v=t.se;
+		q.pop();
+		
+		for(int i = 0; i < 4; i++){
+			int x = u + dx[i];
+            int y = v + dy[i];
+            if(inSide(x,y) && mySet.find(pii(t,ii(x,y))) == mySet.end() && visited[x][y] == 0){
+                visited[x][y] = 1;
+                q.push(ii(x,y));
+            }
+		}
+	}
+}
+
+int main(){
+    ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	cin>>N>>K>>M;
+	for (int i = 1; i <= M; i++){
+		int a, b, c, d;
+		cin >> a >> b >> c >> d;
+		mySet.insert(pii(ii(a,b),ii(c,d)));
+		mySet.insert(pii(ii(c,d),ii(a,b)));
+	}
+	for (int i = 1; i <= K; i++){
+		int x, y;
+		cin >> x >> y;
+		v.push_back(ii(x,y));
+	}
+	int ans = 0;
+	for (int i = 0; i < v.size(); i++){
+		memset(visited, 0, sizeof(visited));
+		BFS(v[i]);
+		for (int j = 0; j < v.size(); j++){
+			if (visited[v[j].fi][v[j].se] == 0)
+				ans++;
+		}
+	}
+	cout << ans / 2;
+}
+//Dem so ao
+#include <bits/stdc++.h>
+using namespace std;
+int n,m;
+char a[105][105];
+bool ok[105][105];
+int res=0;
+int X[]= {-1,-1,-1,0,0,1,1,1};
+int Y[]= {-1,0,1,-1,1,-1,0,1};
+void BFS(int i,int j) {
+    queue < pair<int,int> > q;
+	q.push({i,j});
+	ok[i][j]=true;
+	while(q.size()>0) {
+		pair <int,int> tmp=q.front();
+		q.pop();
+		for(int i=0; i<8; i++) {
+			int x=tmp.first+X[i];
+			int y=tmp.second+Y[i];
+			if(x>=0 && y>=0 && x<n && y<m && !ok[x][y] && a[x][y]=='W') {
+				ok[x][y]=true;
+				q.push({x,y});
+			}
+		}
+	}
+}
+main() {
+	for(int i=0; i<105; i++) {
+		for(int j=0; j<105; j++) {
+			ok[i][j]==false;
+		}
+	}
+	cin>>n>>m;
+	for(int i=0; i<n; i++) {
+		for(int j=0; j<m; j++) {
+			cin>>a[i][j];
+		}
+	}
+	for(int i=0; i<n; i++)
+		for(int j=0; j<m; j++)
+			if(a[i][j]=='W' && ok[i][j]==false) {
+				res++;
+				BFS(i,j);
+			}
+	cout<<res;
+}
+
+

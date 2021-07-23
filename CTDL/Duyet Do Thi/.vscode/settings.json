@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "queue": "cpp",
+        "vector": "cpp",
+        "iostream": "cpp"
+    },
+    "cSpell.words": [
+        "truoc"
+    ]
+}
